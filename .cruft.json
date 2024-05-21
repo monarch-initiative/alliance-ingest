@@ -1,0 +1,25 @@
+{
+  "template": "https://github.com/monarch-initiative/cookiecutter-monarch-ingest.git",
+  "commit": "55b00fa45ba9a1056ebc4447270c1f76f8d17c59",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "github_org_name": "monarch-initiative",
+      "project_name": "alliance-disease-association-ingest",
+      "project_description": "Transformation of the alliance gene, allele and model/genotype to disease associations",
+      "__repo_name": "alliance-disease-association-ingest",
+      "__project_slug": "alliance_disease_association_ingest",
+      "__project_url": "https://github.com/monarch-initiative/alliance-disease-association-ingest",
+      "ingest_source": "alliance",
+      "ingest_type": "adisease_association",
+      "__ingest_name": "alliance_adisease_association",
+      "min_python_version": "3.10",
+      "full_name": "Kevin Schaper",
+      "email": "kevin@tislab.org",
+      "__author": "Kevin Schaper <kevin@tislab.org>",
+      "license": "BSD-3",
+      "_template": "https://github.com/monarch-initiative/cookiecutter-monarch-ingest.git"
+    }
+  },
+  "directory": null
+}
