@@ -8,8 +8,26 @@ delimiter: "\t"
 files:
   - "./data/DISEASE-ALLIANCE_COMBINED.tsv.gz"
 
-depends_on:
-  - './src/alliance_disease_association_ingest/alliance_entity_lookup.yaml'
+columns:
+  - Taxon
+  - SpeciesName
+  - DBobjectType
+  - DBObjectID
+  - DBObjectSymbol
+  - AssociationType
+  - DOID
+  - DOtermName
+  - WithOrtholog
+  - InferredFromID
+  - InferredFromSymbol
+  - ExperimentalCondition
+  - Modifier
+  - EvidenceCode
+  - EvidenceCodeName
+  - Reference
+  - Date
+  - Source
+
 
 edge_properties:
   - id

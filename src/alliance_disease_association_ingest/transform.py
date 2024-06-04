@@ -1,7 +1,9 @@
+import uuid
+
 from biolink_model.datamodel.pydanticmodel_v2 import (
     GeneToDiseaseAssociation,
     GenotypeToDiseaseAssociation,
-    VariantToDiseaseAssociation,
+    VariantToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum,
 )
 from koza.cli_utils import get_koza_app
 
@@ -20,7 +22,8 @@ source_map = {
 koza_app = get_koza_app("alliance_disease_association")
 
 while (row := koza_app.get_row()) is not None:
-    subject_category = row["DBObjectType"]
+    subject_category = row["DBobjectType"]
+    print(subject_category)
     if subject_category == 'gene':
         AssociationClass = GeneToDiseaseAssociation
         predicate = "biolink:related_to"  # TODO: sort out accurate predicates for each kind of row
@@ -34,18 +37,20 @@ while (row := koza_app.get_row()) is not None:
         # skip this row if there's an association with another kind of entity that we don't yet support, consider logging?
         koza_app.next_row()
 
+
     association = AssociationClass(
+        id=str(uuid.uuid1()),
         subject=row["DBObjectID"],
         predicate="",  #
         object=row["DOID"],
         has_evidence=[row["EvidenceCode"]],
         # TODO: capture row["ExperimentalCondition"], probably as qualifier?
         # TODO: capture row["Reference"] as publications
-        primary_knowledge_source=source_map[row["objectId"].split(':')[0]],
+        primary_knowledge_source=source_map[row["DBObjectID"].split(':')[0]],
         aggregator_knowledge_source=["infores:monarchinitiative", "infores:agrkb"],
         # TODO: set KnowledgeLevelEnum and AgentType enum, it looks like there are inferred edges and that can show up in the KL/AT
-        # knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-        # agent_type=AgentTypeEnum.manual_agent
+        knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+        agent_type=AgentTypeEnum.manual_agent
     )
 
     koza_app.write(association)
