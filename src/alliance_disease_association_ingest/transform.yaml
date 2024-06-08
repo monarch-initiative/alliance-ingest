@@ -1,7 +1,7 @@
 # Config file for transforming data from a source
 # See additional/optional config parameters at https://koza.monarchinitiative.org/Ingests/source_config/
 
-name: "alliance_disease_association"
+name: "alliance_disease"
 metadata: "./src/alliance_disease_association_ingest/metadata.yaml"
 format: "csv"
 delimiter: "\t"

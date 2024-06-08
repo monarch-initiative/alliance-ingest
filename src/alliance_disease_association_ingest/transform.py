@@ -19,7 +19,7 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
-koza_app = get_koza_app("alliance_disease_association")
+koza_app = get_koza_app("alliance_disease")
 
 while (row := koza_app.get_row()) is not None:
     subject_category = row["DBobjectType"]
