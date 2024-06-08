@@ -3,7 +3,7 @@
 # See metadata properties at https://koza.monarchinitiative.org/Ingests/source_config/
 
 id:  'CURIE for the project'
-name: 'alliance_adisease_association'
+name: 'alliance_disease_association'
 ingest_title: 'alliance_disease_association_ingest'
 ingest_url: 'https://github.com/monarch-initiative/alliance-disease-association-ingest'
 description: 'Transformation of the alliance gene, allele and model/genotype to disease associations'

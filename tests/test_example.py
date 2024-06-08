@@ -11,7 +11,7 @@ https://koza.monarchinitiative.org/Usage/testing/
 import pytest
 
 # Define the ingest name and transform script path
-INGEST_NAME = "alliance_adisease_association"
+INGEST_NAME = "alliance_disease_association"
 TRANSFORM_SCRIPT = "./src/alliance_disease_association_ingest/transform.py"
 
 
