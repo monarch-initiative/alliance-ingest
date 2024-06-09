@@ -59,7 +59,7 @@ while (row := koza_app.get_row()) is not None:
     association = AssociationClass(
         id=str(uuid.uuid1()),
         subject=row["DBObjectID"],
-        predicate="",  #
+        predicate=predicate,
         object=row["DOID"],
         has_evidence=[row["EvidenceCode"]],
         # TODO: capture row["ExperimentalCondition"], probably as qualifier?
