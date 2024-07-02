@@ -19,6 +19,8 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
+ZF_STANDARD_CONDITIONS = "Has Condition: standard conditions"
+
 koza_app = get_koza_app("alliance_disease")
 
 while (row := koza_app.get_row()) is not None:
@@ -54,6 +56,11 @@ while (row := koza_app.get_row()) is not None:
  #       predicate = "biolink:biomarker_for"
     else:
         # skip this row if there's an association type that we don't yet support
+        continue
+
+    # Exclude any rows with experimental conditions (aside from standard conditions) or modifiers
+    if ((row.get("ExperimentalCondition") and row.get("ExperimentalCondition") != ZF_STANDARD_CONDITIONS)
+            or row.get("Modifier")):
         continue
 
     association = AssociationClass(
