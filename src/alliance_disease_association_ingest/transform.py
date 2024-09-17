@@ -1,10 +1,12 @@
 import uuid
 
 from biolink_model.datamodel.pydanticmodel_v2 import (
+    Association,
     GeneToDiseaseAssociation,
     GenotypeToDiseaseAssociation,
     VariantToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum,
 )
+from typing import Dict
 from koza.cli_utils import get_koza_app
 
 #  TODO: look at row["source"] to update this map
@@ -23,6 +25,7 @@ ZF_STANDARD_CONDITIONS = "Has Condition: standard conditions"
 
 koza_app = get_koza_app("alliance_disease")
 
+entities = []  # : Dict[str, Association] = {}
 while (row := koza_app.get_row()) is not None:
     subject_category = row["DBobjectType"]
     if subject_category == 'gene':
@@ -79,4 +82,6 @@ while (row := koza_app.get_row()) is not None:
         agent_type=AgentTypeEnum.manual_agent
     )
 
-    koza_app.write(association)
+    entities.append(association)
+
+koza_app.write(*entities)
