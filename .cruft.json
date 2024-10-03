@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/monarch-initiative/cookiecutter-monarch-ingest.git",
-  "commit": "bd969c818d9380b12a43d0cc4a20765ea6aa12c8",
+  "commit": "7adc342e862859e6268faf61b0281f63215998fb",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -12,7 +12,7 @@
       "__project_url": "https://github.com/monarch-initiative/alliance-disease-association-ingest",
       "ingest_source": "alliance",
       "ingest_type": "adisease_association",
-      "__ingest_name": "alliance_disease_association",
+      "__ingest_name": "alliance_adisease_association",
       "min_python_version": "3.10",
       "full_name": "Kevin Schaper",
       "email": "kevin@tislab.org",
