@@ -82,6 +82,4 @@ while (row := koza_app.get_row()) is not None:
         agent_type=AgentTypeEnum.manual_agent
     )
 
-    entities.append(association)
-
-koza_app.write(*entities)
+    koza_app.write(association)
