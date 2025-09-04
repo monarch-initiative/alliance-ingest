@@ -1,13 +1,20 @@
-from koza.cli_utils import get_koza_app
-from source_translation import source_map
-
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
+from typing import List
 
-koza_app = get_koza_app("alliance_gene")
-taxon_labels = koza_app.get_map("taxon-labels")
+source_map = {
+    "FB": "infores:flybase",
+    "MGI": "infores:mgi",
+    "RGD": "infores:rgd",
+    "HGNC": "infores:rgd",  # Alliance contains RGD curation of human genes
+    "SGD": "infores:sgd",
+    "WB": "infores:wormbase",
+    "Xenbase": "infores:xenbase",
+    "ZFIN": "infores:zfin",
+}
 
-while (row := koza_app.get_row()) is not None:
-
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List[Gene]:
     # curie prefix as source?
     gene_id = row["basicGeneticEntity"]["primaryId"]
 
@@ -20,9 +27,11 @@ while (row := koza_app.get_row()) is not None:
         row["name"] = row["symbol"]
 
     in_taxon = row["basicGeneticEntity"]["taxonId"]
-    if in_taxon in taxon_labels.keys():
-        in_taxon_label = taxon_labels[in_taxon]['label']
-    else:
+    
+    # Try taxon label lookup first, fall back to hardcoded values
+    try:
+        in_taxon_label = koza_transform.lookup(in_taxon, "label", "taxon-labels")
+    except Exception:
         if in_taxon == "NCBITaxon:10090":
             in_taxon_label = "Mus musculus"
         elif in_taxon == "NCBITaxon:7955":
@@ -56,9 +65,10 @@ while (row := koza_app.get_row()) is not None:
     )
 
     if row["basicGeneticEntity"]["crossReferences"]:
-        gene.xref = [koza_app.curie_cleaner.clean(xref["id"]) for xref in row["basicGeneticEntity"]["crossReferences"]]
+        # Note: curie_cleaner is not available in Koza 2.0, will need to handle this differently if needed
+        gene.xref = [xref["id"] for xref in row["basicGeneticEntity"]["crossReferences"]]
     if "synonyms" in row["basicGeneticEntity"].keys():
         # more handling for errant carriage returns
         gene.synonym = [synonym.replace("\r", "") for synonym in row["basicGeneticEntity"]["synonyms"]]
 
-    koza_app.write(gene)
+    return [gene]

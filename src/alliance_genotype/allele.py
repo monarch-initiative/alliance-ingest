@@ -1,6 +1,7 @@
 import csv
 import sys
 import uuid
+from typing import List
 
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
@@ -8,12 +9,10 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     SequenceVariant,
     VariantToGeneAssociation,
 )
-from koza.cli_utils import get_koza_app
+import koza
 
 # There's some very large chunks of sequence in the ingest file, this lets koza load them
 csv.field_size_limit(sys.maxsize)
-
-koza_app = get_koza_app("alliance_allele")
 
 source_map = {
     "MGI": "infores:mgi",
@@ -49,10 +48,11 @@ def get_source_from_id(curie_id):
     return None
 
 
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List:
     # Skip rows without allele IDs
     if not row["AlleleId"] or row["AlleleId"] == "-":
-        continue
+        return []
 
     # Create allele/variant entity
     allele_id = row["AlleleId"]
@@ -89,5 +89,4 @@ while (row := koza_app.get_row()) is not None:
         )
         entities.append(allele_to_gene)
 
-    # Write all entities
-    koza_app.write(*entities)
+    return entities

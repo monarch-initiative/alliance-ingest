@@ -6,8 +6,8 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     GenotypeToDiseaseAssociation,
     VariantToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum,
 )
-from typing import Dict
-from koza.cli_utils import get_koza_app
+from typing import Dict, List
+import koza
 
 #  TODO: look at row["source"] to update this map
 source_map = {
@@ -23,10 +23,8 @@ source_map = {
 
 ZF_STANDARD_CONDITIONS = "Has Condition: standard conditions"
 
-koza_app = get_koza_app("alliance_disease")
-
-entities = []  # : Dict[str, Association] = {}
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List[Association]:
     subject_category = row["DBobjectType"]
     if subject_category == 'gene':
         AssociationClass = GeneToDiseaseAssociation
@@ -39,7 +37,7 @@ while (row := koza_app.get_row()) is not None:
         predicate = "biolink:model_of"
     else:
         # skip this row if there's an association with another kind of entity that we don't yet support, consider logging?
-        continue
+        return []
 
     ## from Alliance disease association UI:
     # "Is Implicated in" means that some variant of the gene is shown to function in causing or modifying a disease (for human) or a disease model state.
@@ -59,12 +57,12 @@ while (row := koza_app.get_row()) is not None:
  #       predicate = "biolink:biomarker_for"
     else:
         # skip this row if there's an association type that we don't yet support
-        continue
+        return []
 
     # Exclude any rows with experimental conditions (aside from standard conditions) or modifiers
     if ((row.get("ExperimentalCondition") and row.get("ExperimentalCondition") != ZF_STANDARD_CONDITIONS)
             or row.get("Modifier")):
-        continue
+        return []
 
     association = AssociationClass(
         id=str(uuid.uuid1()),
@@ -82,4 +80,4 @@ while (row := koza_app.get_row()) is not None:
         agent_type=AgentTypeEnum.manual_agent
     )
 
-    koza_app.write(association)
+    return [association]

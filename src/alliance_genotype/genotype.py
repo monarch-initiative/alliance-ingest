@@ -1,4 +1,5 @@
 import uuid  # For generating UUIDs for associations
+from typing import List
 
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
@@ -7,10 +8,7 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     GenotypeToVariantAssociation,
     KnowledgeLevelEnum,
 )
-from koza.cli_utils import get_koza_app
-
-koza_app = get_koza_app("alliance_genotype")
-allele_to_gene_lookup = koza_app.get_map("allele_to_gene")
+import koza
 
 source_map = {
     "FB": "infores:flybase",
@@ -29,12 +27,10 @@ taxon_label_map = {
     "NCBITaxon:10116": "Rattus norvegicus",
 }
 
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List:
     # Code to transform each row of data
     # For more information, see https://koza.monarchinitiative.org/Ingests/transform
-    #    print(row)
-    #    print(row["crossReference"])
-    #    print([xref.id for xref in row["crossReference"]])
     genotype = Genotype(
         id=row["primaryID"],
         type=[row["subtype"]] if "subtype" in row else None,
@@ -58,20 +54,23 @@ while (row := koza_app.get_row()) is not None:
         )
         entities.append(genotype_to_variant_association)
 
-        gene = allele_to_gene_lookup.get(allele["alleleID"], {}).get('AlleleAssociatedGeneId', None)
-        print("gene: ", gene)
-        if gene:
-            genotype_to_gene_association = GenotypeToGeneAssociation(
-                id=str(uuid.uuid4()),
-                subject=genotype.id,
-                # More specific predicate may come eventually, keeping it vague for now
-                predicate="biolink:related_to",
-                object=gene,
-                primary_knowledge_source=source_map[row["primaryID"].split(':')[0]],
-                aggregator_knowledge_source=["infores:monarchinitiative", "infores:agrkb"],
-                knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
-                agent_type=AgentTypeEnum.manual_agent,
-            )
-            entities.append(genotype_to_gene_association)
+        try:
+            gene_data = koza_transform.lookup(allele["alleleID"], "AlleleAssociatedGeneId", "allele_to_gene")
+            if gene_data:
+                genotype_to_gene_association = GenotypeToGeneAssociation(
+                    id=str(uuid.uuid4()),
+                    subject=genotype.id,
+                    # More specific predicate may come eventually, keeping it vague for now
+                    predicate="biolink:related_to",
+                    object=gene_data,
+                    primary_knowledge_source=source_map[row["primaryID"].split(':')[0]],
+                    aggregator_knowledge_source=["infores:monarchinitiative", "infores:agrkb"],
+                    knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
+                    agent_type=AgentTypeEnum.manual_agent,
+                )
+                entities.append(genotype_to_gene_association)
+        except Exception:
+            # If lookup fails, skip the gene association
+            pass
 
-    koza_app.write(*entities)
+    return entities

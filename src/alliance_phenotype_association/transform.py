@@ -9,7 +9,7 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     KnowledgeLevelEnum,
     VariantToPhenotypicFeatureAssociation,
 )
-from koza.cli_utils import get_koza_app
+import koza
 from loguru import logger
 
 source_map = {
@@ -23,22 +23,20 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
-koza_app = get_koza_app("alliance_phenotype")
-entity_lookup = koza_app.get_map("alliance-entity-lookup")
-
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List:
     if len(row["phenotypeTermIdentifiers"]) == 0:
         logger.warning("Phenotype ingest record has 0 phenotype terms: " + str(row))
-        koza_app.next_row()
+        return []
     if len(row["phenotypeTermIdentifiers"]) > 1:
         logger.warning("Phenotype ingest record has >1 phenotype terms: " + str(row))
-        koza_app.next_row()
+        return []
 
     id = row["objectId"]
     try:
-        category = entity_lookup[id]["category"]
+        category = koza_transform.lookup(id, "category", "alliance-entity-lookup")
     except KeyError:
-        continue
+        return []
 
     phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]
     # Remove the extra WB: prefix if necessary
@@ -74,4 +72,4 @@ while (row := koza_app.get_row()) is not None:
                     qualifiers.append(qualifier_term)
         association.qualifiers = qualifiers
 
-    koza_app.write(association)
+    return [association]
