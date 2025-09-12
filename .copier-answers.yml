@@ -1,0 +1,13 @@
+# Generated from .cruft.json for copier migration
+_templates_suffix: .jinja
+_commit: ab26a8e011195004d68d8af08696c4427f14b9f7
+_src_path: ../cookiecutter-monarch-ingest
+
+# Project configuration
+github_org: monarch-initiative
+project_name: alliance-ingest
+project_description: "Transformation of the alliance gene, allele and model/genotype to disease associations"
+min_python_version: "3.10"
+full_name: Kevin Schaper
+email: kevin@tislab.org
+license: BSD-3-Clause
