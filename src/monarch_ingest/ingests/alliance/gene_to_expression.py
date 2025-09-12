@@ -1,6 +1,7 @@
 import uuid
+from typing import List
 
-from koza.cli_utils import get_koza_app
+import koza
 from source_translation import source_map
 
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation, KnowledgeLevelEnum, AgentTypeEnum
@@ -9,9 +10,10 @@ from monarch_ingest.ingests.alliance.utils import get_data
 
 from loguru import logger
 
-koza_app = get_koza_app("alliance_gene_to_expression")
-
-while (row := koza_app.get_row()) is not None:
+@koza.transform_record()
+def transform_record(koza_transform, row: dict) -> List[GeneToExpressionSiteAssociation]:
+    results = []
+    
     try:
         gene_id = get_data(row, "geneId")
 
@@ -40,7 +42,7 @@ while (row := koza_app.get_row()) is not None:
 
         # Our current ingest policy is to first use a reported Anatomical structure term...
         if anatomical_entity_id:
-            koza_app.write(
+            results.append(
                 GeneToExpressionSiteAssociation(
                     id="uuid:" + str(uuid.uuid1()),
                     subject=gene_id,
@@ -59,7 +61,7 @@ while (row := koza_app.get_row()) is not None:
         elif cellular_component_id:
             # ... and failing that, fall back to using a subcellular component
             # (but ignore otherwise ignore it, if reported alongside in the record)
-            koza_app.write(
+            results.append(
                 GeneToExpressionSiteAssociation(
                     id="uuid:" + str(uuid.uuid1()),
                     subject=gene_id,
@@ -82,3 +84,5 @@ while (row := koza_app.get_row()) is not None:
 
     except Exception as exc:
         logger.error(f"Alliance gene expression ingest parsing exception for data row:\n\t'{str(row)}'\n{str(exc)}")
+    
+    return results

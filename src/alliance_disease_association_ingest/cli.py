@@ -5,7 +5,7 @@ from pathlib import Path
 
 import typer
 from kghub_downloader.download_utils import download_from_yaml
-from koza.cli_utils import transform_source
+from koza import KozaRunner
 
 app = typer.Typer()
 logger = logging.getLogger(__name__)
@@ -35,15 +35,16 @@ def download(force: bool = typer.Option(False, help="Force download of data, eve
 def transform(
     output_dir: str = typer.Option("output", help="Output directory for transformed data"),
     row_limit: int = typer.Option(None, help="Number of rows to process"),
-    verbose: int = typer.Option(False, help="Whether to be verbose"),
+    verbose: bool = typer.Option(False, help="Whether to be verbose"),
 ):
     """Run the Koza transform for alliance-disease-association-ingest."""
     typer.echo("Transforming data for alliance-disease-association-ingest...")
-    transform_code = Path(__file__).parent / "transform.yaml"
-    transform_source(
-        source=transform_code,
+    transform_config = Path(__file__).parent / "transform.yaml"
+    
+    runner = KozaRunner()
+    runner.run(
+        config_path=str(transform_config),
         output_dir=output_dir,
-        output_format="tsv",
         row_limit=row_limit,
         verbose=verbose,
     )
