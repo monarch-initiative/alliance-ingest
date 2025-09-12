@@ -1,6 +1,6 @@
 # Generated from .cruft.json for copier migration
 _templates_suffix: .jinja
-_commit: ab26a8e011195004d68d8af08696c4427f14b9f7
+_commit: 815e115b7bb3bd03627dee276440ee9b4df6f2e5
 _src_path: ../cookiecutter-monarch-ingest
 
 # Project configuration
