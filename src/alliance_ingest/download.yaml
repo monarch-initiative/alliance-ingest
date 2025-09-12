@@ -1,0 +1,42 @@
+### This file is a YAML configuration that specifies
+### the data to be downloaded and ingested for this project.
+### The configuration is used by `kghub-downloader`.
+### For more information, see https://github.com/monarch-initiative/kghub-downloader
+---
+# Disease Association Data
+- url: https://fms.alliancegenome.org/download/DISEASE-ALLIANCE_COMBINED.tsv.gz
+  local_name: data/DISEASE-ALLIANCE_COMBINED.tsv.gz
+
+# Phenotype Data
+- url: https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz
+  local_name: data/PHENOTYPE_RGD.json.gz
+- url: https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz
+  local_name: data/PHENOTYPE_MGI.json.gz
+- url: https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz
+  local_name: data/PHENOTYPE_WB.json.gz
+
+# Gene Files
+- url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
+  local_name: data/BGI_MGI.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_RGD.json.gz
+  local_name: data/BGI_RGD.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
+  local_name: data/BGI_WB.json.gz
+
+# Allele/Variant Files
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon6239.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon6239.tsv.gz
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon7955.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon7955.tsv.gz
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon10090.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon10090.tsv.gz
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
+
+# AGM / Genotype Files  
+- url: https://fms.alliancegenome.org/download/AGM_MGI.json.gz
+  local_name: data/AGM_MGI.json.gz
+- url: https://fms.alliancegenome.org/download/AGM_ZFIN.json.gz
+  local_name: data/AGM_ZFIN.json.gz
+- url: https://fms.alliancegenome.org/download/AGM_RGD.json.gz
+  local_name: data/AGM_RGD.json.gz
