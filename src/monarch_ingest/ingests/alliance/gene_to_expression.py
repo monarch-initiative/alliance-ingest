@@ -2,7 +2,7 @@ import uuid
 from typing import List
 
 import koza
-from source_translation import source_map
+from monarch_ingest.ingests.alliance.source_translation import source_map
 
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation, KnowledgeLevelEnum, AgentTypeEnum
 
