@@ -1,7 +1,7 @@
 {
   "template": "https://github.com/monarch-initiative/cookiecutter-monarch-ingest.git",
-  "commit": "7adc342e862859e6268faf61b0281f63215998fb",
-  "checkout": null,
+  "commit": "ab26a8e011195004d68d8af08696c4427f14b9f7",
+  "checkout": "feature/new-koza-api-uv",
   "context": {
     "cookiecutter": {
       "github_org_name": "monarch-initiative",

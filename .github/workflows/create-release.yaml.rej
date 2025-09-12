@@ -1,0 +1,9 @@
+diff a/.github/workflows/create-release.yaml b/.github/workflows/create-release.yaml	(rejected hunks)
+@@ -52,5 +52,6 @@ jobs:
+           tag_name: ${{ env.DATE }}
+           files: |
+             output/*
++            output/**/*
+           generate_release_notes: true
+           draft: true
+\ No newline at end of file

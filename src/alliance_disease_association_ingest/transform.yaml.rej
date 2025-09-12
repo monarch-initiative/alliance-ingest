@@ -1,0 +1,14 @@
+diff a/src/alliance_disease_association_ingest/transform.yaml b/src/alliance_disease_association_ingest/transform.yaml	(rejected hunks)
+@@ -2,10 +2,10 @@
+ # See additional/optional config parameters at https://koza.monarchinitiative.org/Ingests/source_config/
+ 
+ name: "alliance_adisease_association"
+-metadata: "./src/alliance_disease_association_ingest/metadata.yaml"
++metadata: "./metadata.yaml"
+ format: "csv" # Format of the data files (csv or json)
+ files:
+-  - "./data/example_data.tsv"
++  - "../../data/example_data.tsv"
+ #################################################################################################
+ ### file_archive is typically optional, but required if:                                      ###
+ ###    1. files is not provided                                                               ###
