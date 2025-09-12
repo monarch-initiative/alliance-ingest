@@ -5,29 +5,29 @@ RUN = uv run
 
 define HELP
 ╭───────────────────────────────────────────────────────────╮
-  Makefile for alliance_disease_association_ingest			    
+│  Makefile for alliance-ingest (multi-transform)          │
 │ ───────────────────────────────────────────────────────── │
 │ Usage:                                                    │
 │     make <target>                                         │
 │                                                           │
-│ Targets:                                                  │
+│ Main Targets:                                             │
 │     help                Print this help message           │
-│                                                           │
 │     all                 Install everything and test       │
-│     fresh               Clean and install everything      │
-│     clean               Clean up build artifacts          │
-│     clobber             Clean up generated files          │
-│                                                           │
-│     install             UV install package                 │
-│     download            Download data                     │
-│     run                 Run the transform                 │
-│                                                           │
-│     docs                Generate documentation            │
-│                                                           │
+│     install             UV install package                │
+│     download            Download data for ALL ingests     │
+│     run                 Run ALL transforms                │
 │     test                Run all tests                     │
 │                                                           │
+│ Individual Ingest Targets:                                │
+│     run-disease         Run disease association ingest    │
+│     run-genotype        Run genotype ingest               │
+│     run-phenotype       Run phenotype association ingest  │
+│                                                           │
+│ Other Targets:                                            │
+│     docs                Generate documentation            │
 │     lint                Lint all code                     │
 │     format              Format all code                   │
+│     clean               Clean up build artifacts          │
 ╰───────────────────────────────────────────────────────────╯
 endef
 export HELP
@@ -70,10 +70,19 @@ test:
 download:
 	$(RUN) ingest download
 
-.PHONY: run
-run: download
+.PHONY: transform  
+transform:
 	$(RUN) ingest transform
+
+.PHONY: run
+run:
+	$(RUN) ingest run
 	$(RUN) python scripts/generate-report.py
+
+# Discover what would be run
+.PHONY: discover
+discover:
+	$(RUN) ingest discover
 
 
 ### Linting, Formatting, and Cleaning ###

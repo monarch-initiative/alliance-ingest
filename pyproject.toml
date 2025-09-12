@@ -18,6 +18,7 @@ dependencies = [
     "loguru",
     "typer>=0.12.5",
     "click>=8.1.0,<8.2.0",
+    "rich>=13.0.0",
 ]
 
 [project.optional-dependencies]
@@ -32,9 +33,7 @@ dev = [
 ]
 
 [project.scripts]
-alliance-disease-ingest = "alliance_disease_association_ingest.cli:app"
-alliance-genotype-ingest = "alliance_genotype.cli:app"  
-alliance-phenotype-ingest = "alliance_phenotype_association.cli:app"
+ingest = "alliance_ingest.cli:app"
 
 [tool.black]
 line-length = 120

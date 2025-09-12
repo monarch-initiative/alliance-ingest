@@ -5,6 +5,7 @@ from pathlib import Path
 
 import typer
 from kghub_downloader.download_utils import download_from_yaml
+from kghub_downloader.model import DownloadOptions
 from koza import KozaRunner
 
 app = typer.Typer()
@@ -28,7 +29,8 @@ def download(force: bool = typer.Option(False, help="Force download of data, eve
     """Download data for alliance-disease-association-ingest."""
     typer.echo("Downloading data for alliance-disease-association-ingest...")
     download_config = Path(__file__).parent / "download.yaml"
-    download_from_yaml(yaml_file=download_config, output_dir=".", ignore_cache=force)
+    download_options = DownloadOptions(ignore_cache=force)
+    download_from_yaml(yaml_file=str(download_config), output_dir=".", download_options=download_options)
 
 
 @app.command()
