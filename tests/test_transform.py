@@ -9,7 +9,7 @@ https://koza.monarchinitiative.org/Usage/testing/
 """
 
 import pytest
-from koza.utils.testing_utils import mock_koza
+# mock_koza is now provided by conftest.py fixture
 
 # Define the ingest name and transform script path
 INGEST_NAME = "alliance_disease"

@@ -1,5 +1,5 @@
 import pytest
-from koza.utils.testing_utils import mock_koza  # noqa: F401
+# mock_koza is now provided by conftest.py fixture
 
 
 @pytest.fixture
