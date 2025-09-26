@@ -59,18 +59,17 @@ def run_command(cmd: List[str], description: str) -> bool:
         return False
 
 
-@app.command()
-def download(
-    output_dir: str = typer.Option(".", help="Output directory for downloaded data"),
-    ignore_cache: bool = typer.Option(False, help="Force download of data, even if it exists"),
-    verbose: bool = typer.Option(False, help="Verbose output")
-):
-    """Download all data sources."""
+def run_downloads(
+    output_dir: str = ".",
+    ignore_cache: bool = False,
+    verbose: bool = False
+) -> int:
+    """Download all data sources. Returns number of successful downloads."""
     download_configs = discover_download_configs()
     
     if not download_configs:
         console.print("[yellow]No download.yaml files found[/yellow]")
-        return
+        return 0
     
     console.print(Panel(f"[bold]Downloading data from {len(download_configs)} sources[/bold]"))
     
@@ -88,21 +87,31 @@ def download(
             success_count += 1
     
     console.print(f"[bold]Downloads completed: {success_count}/{len(download_configs)} successful[/bold]")
+    return success_count
 
 
 @app.command()
-def transform(
-    output_dir: str = typer.Option("output", help="Output directory for transformed data"),
-    output_format: str = typer.Option("tsv", help="Output format (tsv, jsonl, kgx)"),
-    limit: Optional[int] = typer.Option(None, help="Number of rows to process per transform"),
-    progress: bool = typer.Option(False, help="Show progress bars"),
+def download(
+    output_dir: str = typer.Option(".", help="Output directory for downloaded data"),
+    ignore_cache: bool = typer.Option(False, help="Force download of data, even if it exists"),
+    verbose: bool = typer.Option(False, help="Verbose output")
 ):
-    """Run all discovered transforms."""
+    """Download all data sources."""
+    run_downloads(output_dir, ignore_cache, verbose)
+
+
+def run_transforms(
+    output_dir: str = "output",
+    output_format: str = "tsv", 
+    limit: Optional[int] = None,
+    progress: bool = False,
+) -> int:
+    """Run all discovered transforms. Returns number of successful transforms."""
     transform_configs = discover_transform_configs()
     
     if not transform_configs:
         console.print("[yellow]No transform configs found[/yellow]")
-        return
+        return 0
     
     console.print(Panel(f"[bold]Running {len(transform_configs)} transforms[/bold]"))
     
@@ -121,6 +130,18 @@ def transform(
             success_count += 1
     
     console.print(f"[bold]Transforms completed: {success_count}/{len(transform_configs)} successful[/bold]")
+    return success_count
+
+
+@app.command()
+def transform(
+    output_dir: str = typer.Option("output", help="Output directory for transformed data"),
+    output_format: str = typer.Option("tsv", help="Output format (tsv, jsonl, kgx)"),
+    limit: Optional[int] = typer.Option(None, help="Number of rows to process per transform"),
+    progress: bool = typer.Option(False, help="Show progress bars"),
+):
+    """Run all discovered transforms."""
+    run_transforms(output_dir, output_format, limit, progress)
 
 
 @app.command()
@@ -156,7 +177,9 @@ def run(
     # Download phase
     if download_first:
         try:
-            download(output_dir=output_dir)
+            success_count = run_downloads(output_dir=output_dir)
+            if success_count == 0:
+                success = False
         except Exception as e:
             console.print(f"[red]Download phase failed: {e}[/red]")
             success = False
@@ -164,7 +187,9 @@ def run(
     # Transform phase
     if success:
         try:
-            transform(output_dir=output_dir)
+            success_count = run_transforms(output_dir=output_dir)
+            if success_count == 0:
+                success = False
         except Exception as e:
             console.print(f"[red]Transform phase failed: {e}[/red]")
             success = False
