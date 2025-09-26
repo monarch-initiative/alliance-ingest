@@ -1,0 +1,44 @@
+# Config file for transforming data from a source
+# See additional/optional config parameters at https://koza.monarchinitiative.org/Ingests/source_config/
+
+name: "alliance_genotype"
+transform:
+  code: "genotype.py"
+
+reader:
+  format: "json" # Format of the data files (csv or json)
+  files:
+    - "../../data/AGM_MGI.json.gz"
+    - "../../data/AGM_ZFIN.json.gz"
+    - "../../data/AGM_RGD.json.gz"
+  json_path: ["data"]
+  required_properties:
+    - primaryID
+    - name
+    - taxonId
+
+# depends_on: # Not supported in Koza 2.x - removed
+#   - 'src/alliance_genotype/allele_to_gene_map.yaml'
+
+writer:
+  format: tsv
+  node_properties:
+    - id
+    - category
+    - name
+    - type
+    - in_taxon
+    - in_taxon_label
+  edge_properties:
+    - id
+    - category
+    - subject
+    - predicate
+    - object
+    - qualifier
+    - primary_knowledge_source
+    - aggregator_knowledge_source
+    - knowledge_level
+    - agent_type
+  min_node_count: 10
+  min_edge_count: 5

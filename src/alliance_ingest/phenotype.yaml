@@ -1,0 +1,37 @@
+name: 'alliance_phenotype'
+transform:
+  code: "phenotype_association_transform.py"
+
+reader:
+  format: 'json'
+  files:
+    - '../../../output/data/PHENOTYPE_RGD.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz"
+    - '../../../output/data/PHENOTYPE_MGI.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz"
+    - '../../../output/data/PHENOTYPE_WB.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz"
+  json_path:
+    - 'data'
+  required_properties:
+    - 'objectId'
+    - 'phenotypeTermIdentifiers'
+    - 'evidence'
+
+# metadata: './src/alliance_phenotype_ingest/metadata.yaml'
+# depends_on:  # Not supported in Koza 2.x - removed
+#   - './src/alliance_phenotype_association_ingest/alliance_entity_lookup.yaml'
+
+writer:
+  format: tsv
+  edge_properties:
+    - 'id'
+    - 'category'
+    - 'subject'
+    - 'predicate'
+    - 'object'
+    - 'qualifiers'
+    - 'publications'
+    - 'aggregator_knowledge_source'
+    - 'primary_knowledge_source'
+    - 'knowledge_level'
+    - 'agent_type'
+
+# transform_mode: 'flat'  # Not supported in Koza 2.x - removed

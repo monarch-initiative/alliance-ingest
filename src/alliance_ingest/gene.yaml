@@ -1,0 +1,42 @@
+name: 'alliance_gene'
+
+reader:
+  files:
+    - "../../../../data/alliance/BGI_FB.json.gz"
+    - "../../../../data/alliance/BGI_MGI.json.gz"
+    - "../../../../data/alliance/BGI_RGD.json.gz"
+    - "../../../../data/alliance/BGI_SGD.json.gz"
+    - "../../../../data/alliance/BGI_WB.json.gz"
+    - "../../../../data/alliance/BGI_XBXL.json.gz"
+    - "../../../../data/alliance/BGI_XBXT.json.gz"
+    - "../../../../data/alliance/BGI_ZFIN.json.gz"
+  format: 'json'
+  json_path:
+    - 'data'
+  required_properties:
+    - 'basicGeneticEntity'
+    - 'symbol'
+    - 'soTermId'
+    - 'basicGeneticEntity.primaryId'
+    - 'basicGeneticEntity.taxonId'
+
+transform:
+  global_table: '../../../translation_table.yaml'
+
+writer:
+  node_properties:
+    - 'id'
+    - 'category'
+    - 'provided_by'
+    - 'name'
+    - 'symbol'
+    - 'type'
+    - 'full_name'
+    - 'description'
+    - 'in_taxon'
+    - 'in_taxon_label'
+    - 'xref'
+    - 'synonym'
+    - 'provided_by'
+
+metadata: './src/monarch_ingest/ingests/alliance/metadata.yaml'
