@@ -3,21 +3,19 @@ name: 'alliance-entity-lookup'
 metadata:
   description: 'Mapping file to look up the category of an alliance entity that may have a disease association'
 
-delimiter: '\t'
+reader:
+  delimiter: '\t'
+  header_mode: none
+  files:
+    - '../../data/alliance_gene.tsv'
+    - '../../data/alliance_genotype.tsv'
+    - '../../data/alliance_allele.tsv'
+  columns:
+    - 'id'
+    - 'category'
 
-files:
-  - './data/alliance_gene.tsv'
-  - './data/alliance_genotype.tsv'
-  - './data/alliance_allele.tsv'
-
-header: 'none'
-
-columns:
-  - 'id'
-  - 'category'
-
-key: 'id'
-
-values:
-  - 'category'
+transform:
+  key: 'id'
+  values:
+    - 'category'
 

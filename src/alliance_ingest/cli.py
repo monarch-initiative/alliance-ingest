@@ -20,14 +20,18 @@ console = Console()
 
 
 def discover_transform_configs(base_path: Path = Path(".")) -> List[Path]:
-    """Discover all transform YAML files in src/ directory."""
+    """Discover all transform YAML files in src/alliance_ingest directory."""
     transform_configs = []
-    
-    # Look for .yaml files in src/ subdirectories (excluding download.yaml)
-    for yaml_file in base_path.glob("src/**/*.yaml"):
-        if yaml_file.name != "download.yaml" and "transform" in yaml_file.name:
+
+    # Look for .yaml files in src/alliance_ingest directory only (excluding download.yaml and map files)
+    for yaml_file in base_path.glob("src/alliance_ingest/*.yaml"):
+        # Exclude download.yaml, lookup files, map files, and metadata files
+        if (yaml_file.name != "download.yaml" and
+            "lookup" not in yaml_file.name and
+            "_map" not in yaml_file.name and
+            "metadata" not in yaml_file.name):
             transform_configs.append(yaml_file)
-    
+
     return sorted(transform_configs)
 
 

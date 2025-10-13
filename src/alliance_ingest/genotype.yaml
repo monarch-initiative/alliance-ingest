@@ -2,8 +2,6 @@
 # See additional/optional config parameters at https://koza.monarchinitiative.org/Ingests/source_config/
 
 name: "alliance_genotype"
-transform:
-  code: "genotype.py"
 
 reader:
   format: "json" # Format of the data files (csv or json)
@@ -17,8 +15,10 @@ reader:
     - name
     - taxonId
 
-# depends_on: # Not supported in Koza 2.x - removed
-#   - 'src/alliance_genotype/allele_to_gene_map.yaml'
+transform:
+  code: "genotype.py"
+  mappings:
+    - alliance_entity_lookup.yaml
 
 writer:
   format: tsv

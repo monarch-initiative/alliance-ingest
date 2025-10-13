@@ -7,7 +7,7 @@ delimiter: '\t'
 
 # This is generated from the VariantAllele file using scripts/generate-allele-to-gene-map.py
 files:
-  - './data/allele_to_gene.tsv'
+  - '../../data/allele_to_gene.tsv'
 
 header: 'none'
 

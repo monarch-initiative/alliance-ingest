@@ -33,10 +33,24 @@
 - url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
   local_name: data/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
 
-# AGM / Genotype Files  
+# AGM / Genotype Files
 - url: https://fms.alliancegenome.org/download/AGM_MGI.json.gz
   local_name: data/AGM_MGI.json.gz
 - url: https://fms.alliancegenome.org/download/AGM_ZFIN.json.gz
   local_name: data/AGM_ZFIN.json.gz
 - url: https://fms.alliancegenome.org/download/AGM_RGD.json.gz
   local_name: data/AGM_RGD.json.gz
+
+# Expression Data
+- url: https://fms.alliancegenome.org/download/EXPRESSION_RGD.json.gz
+  local_name: data/EXPRESSION_RGD.json.gz
+- url: https://fms.alliancegenome.org/download/EXPRESSION_MGI.json.gz
+  local_name: data/EXPRESSION_MGI.json.gz
+- url: https://fms.alliancegenome.org/download/EXPRESSION_ZFIN.json.gz
+  local_name: data/EXPRESSION_ZFIN.json.gz
+- url: https://fms.alliancegenome.org/download/EXPRESSION_FB.json.gz
+  local_name: data/EXPRESSION_FB.json.gz
+- url: https://fms.alliancegenome.org/download/EXPRESSION_WB.json.gz
+  local_name: data/EXPRESSION_WB.json.gz
+- url: https://fms.alliancegenome.org/download/EXPRESSION_SGD.json.gz
+  local_name: data/EXPRESSION_SGD.json.gz

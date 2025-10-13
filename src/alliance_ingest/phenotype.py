@@ -23,6 +23,16 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
+
+@koza.on_data_end()
+def report_missing_ids(koza_transform):
+    """Report missing ID counts at the end of processing."""
+    if "missing_ids" in koza_transform.state and koza_transform.state["missing_ids"]:
+        logger.warning("IDs not found in entity lookup:")
+        for prefix, count in sorted(koza_transform.state["missing_ids"].items()):
+            logger.warning(f"  {prefix}: {count} IDs")
+
+
 @koza.transform_record()
 def transform_record(koza_transform, row: dict) -> List:
     if len(row["phenotypeTermIdentifiers"]) == 0:
@@ -33,9 +43,18 @@ def transform_record(koza_transform, row: dict) -> List:
         return []
 
     id = row["objectId"]
-    try:
-        category = koza_transform.lookup(id, "category", "alliance-entity-lookup")
-    except KeyError:
+    category = koza_transform.lookup(id, "category")
+
+    # If lookup failed, it returns the ID itself due to on_map_failure: warning
+    # Check if we got a valid biolink category
+    if not category.startswith("biolink:"):
+        # Track missing IDs by prefix
+        prefix = id.split(":")[0]
+        if "missing_ids" not in koza_transform.state:
+            koza_transform.state["missing_ids"] = {}
+        if prefix not in koza_transform.state["missing_ids"]:
+            koza_transform.state["missing_ids"][prefix] = 0
+        koza_transform.state["missing_ids"][prefix] += 1
         return []
 
     phenotypic_feature_id = row["phenotypeTermIdentifiers"][0]["termId"]

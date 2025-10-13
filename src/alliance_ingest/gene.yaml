@@ -2,14 +2,9 @@ name: 'alliance_gene'
 
 reader:
   files:
-    - "../../../../data/alliance/BGI_FB.json.gz"
-    - "../../../../data/alliance/BGI_MGI.json.gz"
-    - "../../../../data/alliance/BGI_RGD.json.gz"
-    - "../../../../data/alliance/BGI_SGD.json.gz"
-    - "../../../../data/alliance/BGI_WB.json.gz"
-    - "../../../../data/alliance/BGI_XBXL.json.gz"
-    - "../../../../data/alliance/BGI_XBXT.json.gz"
-    - "../../../../data/alliance/BGI_ZFIN.json.gz"
+    - "../../data/BGI_MGI.json.gz"
+    - "../../data/BGI_RGD.json.gz"
+    - "../../data/BGI_WB.json.gz"
   format: 'json'
   json_path:
     - 'data'

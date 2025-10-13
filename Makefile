@@ -70,13 +70,51 @@ test:
 download:
 	$(RUN) ingest download
 
-.PHONY: transform  
+.PHONY: post-download
+post-download:
+	gunzip -c data/BGI_*.json.gz 2>/dev/null | jq '.data[].basicGeneticEntity.primaryId' | sed 's@\"@@g'  | sed 's@$$@\tbiolink:Gene@g' > data/alliance_gene.tsv || \
+	cat data/BGI_*.json 2>/dev/null | jq '.data[].basicGeneticEntity.primaryId' | sed 's@\"@@g'  | sed 's@$$@\tbiolink:Gene@g' > data/alliance_gene.tsv
+	gunzip -c data/VARIANT-ALLELE*.tsv.gz 2>/dev/null | grep -v "^#" | grep -v "^Taxon" | cut -f 3 | sort | uniq | sed 's@$$@\tbiolink:SequenceVariant@g' > data/alliance_allele.tsv || \
+	cat data/VARIANT-ALLELE*.tsv 2>/dev/null | grep -v "^#" | grep -v "^Taxon" | cut -f 3 | sort | uniq | sed 's@$$@\tbiolink:SequenceVariant@g' > data/alliance_allele.tsv
+	gunzip -c data/AGM_*.json.gz 2>/dev/null | jq '.data[].primaryID' | sed 's@\"@@g'  | sed 's@$$@\tbiolink:Genotype@g' > data/alliance_genotype.tsv || \
+	cat data/AGM_*.json 2>/dev/null | jq '.data[].primaryID' | sed 's@\"@@g'  | sed 's@$$@\tbiolink:Genotype@g' > data/alliance_genotype.tsv
+
+.PHONY: transform
 transform:
-	$(RUN) ingest transform
+	$(RUN) koza transform src/alliance_ingest/gene.yaml --output-dir output --output-format tsv
+	$(RUN) koza transform src/alliance_ingest/disease.yaml --output-dir output --output-format tsv
+	$(RUN) koza transform src/alliance_ingest/phenotype.yaml --output-dir output --output-format tsv
+	$(RUN) koza transform src/alliance_ingest/expression.yaml --output-dir output --output-format tsv
+	$(RUN) koza transform src/alliance_ingest/genotype.yaml --output-dir output --output-format tsv
+	$(RUN) koza transform src/alliance_ingest/allele.yaml --output-dir output --output-format tsv
+
+# Individual transform targets for testing
+.PHONY: transform-gene
+transform-gene:
+	$(RUN) koza transform src/alliance_ingest/gene.yaml --output-dir output --output-format tsv
+
+.PHONY: transform-disease
+transform-disease:
+	$(RUN) koza transform src/alliance_ingest/disease.yaml --output-dir output --output-format tsv
+
+.PHONY: transform-phenotype
+transform-phenotype:
+	$(RUN) koza transform src/alliance_ingest/phenotype.yaml --output-dir output --output-format tsv
+
+.PHONY: transform-expression
+transform-expression:
+	$(RUN) koza transform src/alliance_ingest/expression.yaml --output-dir output --output-format tsv
+
+.PHONY: transform-genotype
+transform-genotype:
+	$(RUN) koza transform src/alliance_ingest/genotype.yaml --output-dir output --output-format tsv
+
+.PHONY: transform-allele
+transform-allele:
+	$(RUN) koza transform src/alliance_ingest/allele.yaml --output-dir output --output-format tsv
 
 .PHONY: run
-run:
-	$(RUN) ingest run
+run: download post-download transform
 	$(RUN) python scripts/generate-report.py
 
 # Discover what would be run

@@ -1,13 +1,11 @@
 name: 'alliance_phenotype'
-transform:
-  code: "phenotype_association_transform.py"
 
 reader:
   format: 'json'
   files:
-    - '../../../output/data/PHENOTYPE_RGD.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz"
-    - '../../../output/data/PHENOTYPE_MGI.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz"
-    - '../../../output/data/PHENOTYPE_WB.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz"
+    - '../../data/PHENOTYPE_RGD.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_RGD.json.gz"
+    - '../../data/PHENOTYPE_MGI.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_MGI.json.gz"
+    - '../../data/PHENOTYPE_WB.json.gz' # "https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz"
   json_path:
     - 'data'
   required_properties:
@@ -15,9 +13,10 @@ reader:
     - 'phenotypeTermIdentifiers'
     - 'evidence'
 
-# metadata: './src/alliance_phenotype_ingest/metadata.yaml'
-# depends_on:  # Not supported in Koza 2.x - removed
-#   - './src/alliance_phenotype_association_ingest/alliance_entity_lookup.yaml'
+transform:
+  code: "phenotype.py"
+  mappings:
+    - alliance_entity_lookup.yaml
 
 writer:
   format: tsv
