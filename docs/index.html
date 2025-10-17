@@ -399,6 +399,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#edges-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edges Report
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -548,6 +557,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#edges-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edges Report
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -644,6 +662,48 @@
 <li><strong>Knowledge Level</strong>: <code>knowledge_assertion</code></li>
 <li><strong>Agent Type</strong>: <code>manual_agent</code></li>
 </ul>
+<h2 id="edges-report">Edges Report</h2>
+<table>
+<thead>
+<tr>
+<th>category</th>
+<th>subject_prefix</th>
+<th>predicate</th>
+<th>object_prefix</th>
+<th>count_star()</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>biolink:GenotypeToDiseaseAssociation</td>
+<td>MGI</td>
+<td>biolink:model_of</td>
+<td>DOID</td>
+<td>8165</td>
+</tr>
+<tr>
+<td>biolink:GenotypeToDiseaseAssociation</td>
+<td>RGD</td>
+<td>biolink:model_of</td>
+<td>DOID</td>
+<td>787</td>
+</tr>
+<tr>
+<td>biolink:GenotypeToDiseaseAssociation</td>
+<td>WB</td>
+<td>biolink:model_of</td>
+<td>DOID</td>
+<td>548</td>
+</tr>
+<tr>
+<td>biolink:GenotypeToDiseaseAssociation</td>
+<td>ZFIN</td>
+<td>biolink:model_of</td>
+<td>DOID</td>
+<td>1272</td>
+</tr>
+</tbody>
+</table>
 <p>The edges report provides a summary of the number of genotype-to-disease associations from different sources, categorized by subject prefix and predicate:
 This table captures the total number of associations processed from each source, categorized by their specific predicates and object prefixes. The "MOD" (Model Organism Databases) sources such as MGI, RGD, WB, and ZFIN provide the foundational data for these associations.</p>
 
