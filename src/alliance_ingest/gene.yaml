@@ -38,5 +38,6 @@ writer:
     - 'xref'
     - 'synonym'
     - 'provided_by'
+  min_node_count: 300000
 
 metadata: './src/monarch_ingest/ingests/alliance/metadata.yaml'
