@@ -22,6 +22,16 @@
   local_name: data/BGI_RGD.json.gz
 - url: https://fms.alliancegenome.org/download/BGI_WB.json.gz
   local_name: data/BGI_WB.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_FB.json.gz
+  local_name: data/BGI_FB.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_ZFIN.json.gz
+  local_name: data/BGI_ZFIN.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_SGD.json.gz
+  local_name: data/BGI_SGD.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_XBXL.json.gz
+  local_name: data/BGI_XBXL.json.gz
+- url: https://fms.alliancegenome.org/download/BGI_XBXT.json.gz
+  local_name: data/BGI_XBXT.json.gz
 
 # Allele/Variant Files
 - url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon6239.tsv.gz
