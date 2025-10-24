@@ -40,3 +40,4 @@ writer:
     - 'primary_knowledge_source'
     - 'knowledge_level'
     - 'agent_type'
+  min_edge_count: 1800000
