@@ -8,12 +8,12 @@ See the Koza documentation for more information on testing transforms:
 https://koza.monarchinitiative.org/Usage/testing/
 """
 
-from koza import KozaTransform
 import pytest
+from biolink_model.datamodel.pydanticmodel_v2 import Genotype, GenotypeToGeneAssociation, GenotypeToVariantAssociation
+from koza import KozaTransform
+from koza.io.writer.passthrough_writer import PassthroughWriter
 
 from src.alliance_ingest.genotype import transform_record
-from koza.io.writer.passthrough_writer import PassthroughWriter
-from biolink_model.datamodel.pydanticmodel_v2 import Genotype, GenotypeToGeneAssociation, GenotypeToVariantAssociation
 
 
 @pytest.fixture

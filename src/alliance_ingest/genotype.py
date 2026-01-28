@@ -1,6 +1,7 @@
 import uuid  # For generating UUIDs for associations
 from typing import List
 
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
     Genotype,
@@ -8,7 +9,6 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     GenotypeToVariantAssociation,
     KnowledgeLevelEnum,
 )
-import koza
 
 source_map = {
     "FB": "infores:flybase",

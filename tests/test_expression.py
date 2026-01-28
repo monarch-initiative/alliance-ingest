@@ -1,5 +1,4 @@
 import pytest
-
 from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation
 from koza import KozaTransform
 from koza.io.writer.passthrough_writer import PassthroughWriter

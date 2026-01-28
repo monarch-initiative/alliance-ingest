@@ -1,13 +1,15 @@
 import uuid
+from typing import List
 
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
+    AgentTypeEnum,
     Association,
     GeneToDiseaseAssociation,
     GenotypeToDiseaseAssociation,
-    VariantToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum,
+    KnowledgeLevelEnum,
+    VariantToDiseaseAssociation,
 )
-from typing import Dict, List
-import koza
 
 #  TODO: look at row["source"] to update this map
 source_map = {

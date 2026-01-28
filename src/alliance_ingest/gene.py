@@ -1,6 +1,5 @@
 import koza
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
-from loguru import logger
 
 # Inline source_map to avoid relative import issues in Koza 2.0
 source_map = {

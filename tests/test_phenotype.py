@@ -1,10 +1,10 @@
 import pytest
-
 from biolink_model.datamodel.pydanticmodel_v2 import Gene, GeneToPhenotypicFeatureAssociation, PhenotypicFeature
 from koza import KozaTransform
 from koza.io.writer.passthrough_writer import PassthroughWriter
 
 from src.alliance_ingest.phenotype import transform_record
+
 # mock_koza is now provided by conftest.py fixture
 
 

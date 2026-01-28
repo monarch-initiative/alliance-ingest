@@ -1,6 +1,8 @@
 import pytest
 from koza.runner import KozaRunner
+
 from src.alliance_ingest.gene import transform_record
+
 # mock_koza is now provided by conftest.py fixture
 
 

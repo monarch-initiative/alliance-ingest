@@ -1,6 +1,7 @@
 import uuid
+
 import koza
-from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssociation, KnowledgeLevelEnum, AgentTypeEnum
+from biolink_model.datamodel.pydanticmodel_v2 import AgentTypeEnum, GeneToExpressionSiteAssociation, KnowledgeLevelEnum
 from loguru import logger
 
 # Inline source_map to avoid relative import issues in Koza 2.0

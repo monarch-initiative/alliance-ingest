@@ -3,13 +3,13 @@ import sys
 import uuid
 from typing import List
 
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
     KnowledgeLevelEnum,
     SequenceVariant,
     VariantToGeneAssociation,
 )
-import koza
 
 # There's some very large chunks of sequence in the ingest file, this lets koza load them
 csv.field_size_limit(sys.maxsize)

@@ -21,7 +21,7 @@ reader:
     - 'basicGeneticEntity.taxonId'
 
 transform:
-  global_table: '../../../translation_table.yaml'
+  code: 'gene.py'
 
 writer:
   node_properties:
@@ -37,7 +37,4 @@ writer:
     - 'in_taxon_label'
     - 'xref'
     - 'synonym'
-    - 'provided_by'
   min_node_count: 300000
-
-metadata: './src/monarch_ingest/ingests/alliance/metadata.yaml'
