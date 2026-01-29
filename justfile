@@ -26,8 +26,8 @@ run: download postdownload transform-all postprocess
 
 # Download source data
 [group('ingest')]
-download:
-    uv run koza download download.yaml
+download: install
+    uv run downloader download.yaml
 
 # Post-download processing (extract entity lookups)
 [group('ingest')]
