@@ -138,7 +138,12 @@ def no_name_row():
             "synonyms": ["CELE_H17B01.2", "col-70"],
             "taxonId": "NCBITaxon:6239",
         },
-        "geneSynopsis": "Is affected by several genes including daf-2; glp-1; and rrf-3 based on microarray; tiling array; proteomic; and RNA-seq studies. Is affected by twenty-two chemicals including Mercuric Chloride; rotenone; and Tunicamycin based on microarray and RNA-seq studies.",
+        "geneSynopsis": (
+            "Is affected by several genes including daf-2; glp-1; and rrf-3 "
+            "based on microarray; tiling array; proteomic; and RNA-seq studies. "
+            "Is affected by twenty-two chemicals including Mercuric Chloride; "
+            "rotenone; and Tunicamycin based on microarray and RNA-seq studies."
+        ),
         "soTermId": "SO:0001217",
         "symbol": "H17B01.2",
     }

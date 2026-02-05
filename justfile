@@ -46,7 +46,7 @@ postdownload:
 
 # Run all transforms
 [group('ingest')]
-transform-all: download
+transform-all: postdownload
     #!/usr/bin/env bash
     set -euo pipefail
     for t in {{TRANSFORMS}}; do
