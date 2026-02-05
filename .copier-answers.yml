@@ -1,4 +1,4 @@
-_commit: fe21eee73f47a659640e02590a3d72ca82f2ca35
+_commit: adada77
 _src_path: gh:monarch-initiative/koza-ingest-template
 copyright_year: '2026'
 email: kevin@tislab.org
@@ -6,6 +6,7 @@ full_name: Kevin Schaper
 github_handle: monarch-initiative
 github_org: monarch-initiative
 license: BSD-3-Clause
-project_description: "Transformation of Alliance gene, allele, genotype, disease, phenotype, and expression data"
+project_description: Transformation of Alliance gene, allele, genotype, disease, phenotype,
+    and expression data
 project_name: alliance-ingest
 project_slug: alliance_ingest
