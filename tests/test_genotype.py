@@ -8,12 +8,12 @@ See the Koza documentation for more information on testing transforms:
 https://koza.monarchinitiative.org/Usage/testing/
 """
 
-from koza import KozaTransform
 import pytest
+from biolink_model.datamodel.pydanticmodel_v2 import Genotype, GenotypeToGeneAssociation, GenotypeToVariantAssociation
+from koza import KozaTransform
+from koza.io.writer.passthrough_writer import PassthroughWriter
 
 from src.alliance_ingest.genotype import transform_record
-from koza.io.writer.passthrough_writer import PassthroughWriter
-from biolink_model.datamodel.pydanticmodel_v2 import Genotype, GenotypeToGeneAssociation, GenotypeToVariantAssociation
 
 
 @pytest.fixture
@@ -40,7 +40,10 @@ def mgi_agm_row():
     return {
         'primaryID': 'MGI:3626201',
         'subtype': 'genotype',
-        'name': 'Ep300<sup>tm3Pkb</sup>/Ep300<sup>+</sup> Tg(IghMyc)22Bri/0  [background:] involves: 129S6/SvEvTac * C57BL * SJL',
+        'name': (
+            'Ep300<sup>tm3Pkb</sup>/Ep300<sup>+</sup> Tg(IghMyc)22Bri/0  '
+            '[background:] involves: 129S6/SvEvTac * C57BL * SJL'
+        ),
         'taxonId': 'NCBITaxon:10090',
         'crossReference': {'id': 'MGI:3626201', 'pages': ['genotype']},
         'affectedGenomicModelComponents': [
@@ -64,10 +67,11 @@ def test_mgi_agm(mgi_agm):
     genotypes = [entity for entity in entities if isinstance(entity, Genotype)]
     genotype = genotypes[0]
     assert genotype.id == 'MGI:3626201'
-    assert (
-        genotype.name
-        == 'Ep300<sup>tm3Pkb</sup>/Ep300<sup>+</sup> Tg(IghMyc)22Bri/0  [background:] involves: 129S6/SvEvTac * C57BL * SJL'
+    expected_name = (
+        'Ep300<sup>tm3Pkb</sup>/Ep300<sup>+</sup> Tg(IghMyc)22Bri/0  '
+        '[background:] involves: 129S6/SvEvTac * C57BL * SJL'
     )
+    assert genotype.name == expected_name
     assert genotype.in_taxon == ['NCBITaxon:10090']
     assert genotype.in_taxon_label == 'Mus musculus'
 

@@ -1,13 +1,15 @@
 import uuid
+from typing import List
 
+import koza
 from biolink_model.datamodel.pydanticmodel_v2 import (
+    AgentTypeEnum,
     Association,
     GeneToDiseaseAssociation,
     GenotypeToDiseaseAssociation,
-    VariantToDiseaseAssociation, KnowledgeLevelEnum, AgentTypeEnum,
+    KnowledgeLevelEnum,
+    VariantToDiseaseAssociation,
 )
-from typing import Dict, List
-import koza
 
 #  TODO: look at row["source"] to update this map
 source_map = {
@@ -36,12 +38,17 @@ def transform_record(koza_transform, row: dict) -> List[Association]:
         AssociationClass = GenotypeToDiseaseAssociation
         predicate = "biolink:model_of"
     else:
-        # skip this row if there's an association with another kind of entity that we don't yet support, consider logging?
+        # skip this row if there's an association with another kind of entity
+        # that we don't yet support, consider logging?
         return []
 
     ## from Alliance disease association UI:
-    # "Is Implicated in" means that some variant of the gene is shown to function in causing or modifying a disease (for human) or a disease model state.
-    # "Is a marker for" is used when there is evidence of an association but insufficient evidence to establish causality and does not necessarily imply that the existence of, or change in the biomarker is causal for the disease, but rather may result from it.
+    # "Is Implicated in" means that some variant of the gene is shown to function
+    # in causing or modifying a disease (for human) or a disease model state.
+    # "Is a marker for" is used when there is evidence of an association but
+    # insufficient evidence to establish causality and does not necessarily imply
+    # that the existence of, or change in the biomarker is causal for the disease,
+    # but rather may result from it.
 
     ##  predicates map
     # biomarker_via_orthology
@@ -74,8 +81,10 @@ def transform_record(koza_transform, row: dict) -> List[Association]:
         publications=[row["Reference"]],
         primary_knowledge_source=source_map[row["DBObjectID"].split(':')[0]],
         aggregator_knowledge_source=["infores:monarchinitiative", "infores:agrkb"],
-        # TODO: set KnowledgeLevelEnum and AgentType enum, it looks like there are inferred edges and that can show up in the KL/AT
-        # TODO: the via_orthology association types would probably call for different KL/AT values?
+        # TODO: set KnowledgeLevelEnum and AgentType enum, it looks like there are
+        # inferred edges and that can show up in the KL/AT
+        # TODO: the via_orthology association types would probably call for
+        # different KL/AT values?
         knowledge_level=KnowledgeLevelEnum.knowledge_assertion,
         agent_type=AgentTypeEnum.manual_agent
     )

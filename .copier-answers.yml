@@ -1,13 +1,12 @@
-# Generated from .cruft.json for copier migration
-_templates_suffix: .jinja
-_commit: 815e115b7bb3bd03627dee276440ee9b4df6f2e5
-_src_path: ../cookiecutter-monarch-ingest
-
-# Project configuration
-github_org: monarch-initiative
-project_name: alliance-ingest
-project_description: "Transformation of the alliance gene, allele and model/genotype to disease associations"
-min_python_version: "3.10"
-full_name: Kevin Schaper
+_commit: adada77
+_src_path: gh:monarch-initiative/koza-ingest-template
+copyright_year: '2026'
 email: kevin@tislab.org
+full_name: Kevin Schaper
+github_handle: monarch-initiative
+github_org: monarch-initiative
 license: BSD-3-Clause
+project_description: Transformation of Alliance gene, allele, genotype, disease, phenotype,
+    and expression data
+project_name: alliance-ingest
+project_slug: alliance_ingest

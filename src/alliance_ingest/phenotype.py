@@ -1,6 +1,8 @@
 import uuid
 from typing import List
 
+import koza
+
 # from source_translation import source_map
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
@@ -9,7 +11,6 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     KnowledgeLevelEnum,
     VariantToPhenotypicFeatureAssociation,
 )
-import koza
 from loguru import logger
 
 source_map = {

@@ -1,164 +1,205 @@
-# alliance-disease-association-ingest
+# alliance-ingest
 
-| [Documentation](https://monarch-initiative.github.io/alliance-disease-association-ingest) |
+The [Alliance of Genome Resources](https://www.alliancegenome.org/) contains a subset of model organism data from member databases that is harmonized to the same model. The Alliance has bulk data downloads, ingest data formats, and an API. In some cases it may continue to be more practical to load from individual MODs when data is not yet fully harmonized in the Alliance.
 
-Transformation of the alliance gene, allele and model/genotype to disease associations
+- [Alliance Bulk Downloads](https://www.alliancegenome.org/downloads)
+- [Alliance schemas](https://github.com/alliance-genome/agr_schemas)
 
-## Requirements
+## Data Source
 
-- Python >= 3.10
+Data is downloaded from: `https://fms.alliancegenome.org/download/`
 
-- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+### Species Included
 
+- Human (NCBITaxon:9606)
+- Mouse (NCBITaxon:10090)
+- Rat (NCBITaxon:10116)
+- Zebrafish (NCBITaxon:7955)
+- Fruit fly (NCBITaxon:7227)
+- C. elegans (NCBITaxon:6239)
+- Baker's yeast (NCBITaxon:4932)
+- Frog (NCBITaxon:8364)
 
-# Setting Up a New Project -- Delete this section when completed
+Data sources: MGI, RGD, WormBase, FlyBase, ZFIN, SGD, Xenbase
 
-Upon creating a new project from the `cookiecutter-monarch-ingest` template, you can install and test the project:
+## Output
 
-```bash
-cd alliance-disease-association-ingest
-make install
-make test
-```
+### Gene
 
-There are a few additional steps to complete before the project is ready for use.
+Gene entities from [BGI (Basic Gene Information)](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/gene) ingest files for all Alliance species.
 
-#### GitHub Repository
+**Biolink captured:**
 
-1. Create a new repository on GitHub.
-1. Enable GitHub Actions to read and write to the repository (required to deploy the project to GitHub Pages).
-   - in GitHub, go to Settings -> Action -> General -> Workflow permissions and choose read and write permissions
-1. Initialize the local repository and push the code to GitHub. For example:
+- `biolink:Gene`
+    - id (gene CURIE)
+    - symbol
+    - name
+    - type (SO term for gene type)
+    - in_taxon (NCBI Taxon ID)
+    - in_taxon_label (species name)
+    - xref (cross-references)
+    - synonym
+    - provided_by (source database)
 
-   ```bash
-   cd alliance-disease-association-ingest
-   git init
-   git remote add origin https://github.com/<username>/<repository>.git
-   git add -A && git commit -m "Initial commit"
-   git push -u origin main
-   ```
+### Disease
 
-#### Transform Code and Configuration
+Disease associations from the combined Alliance disease file. Supports gene, allele, and genotype (affected genomic model) subjects. Only "is_model_of" association types are currently processed; rows with experimental conditions (except "standard conditions") or modifiers are filtered.
 
-1. Edit the `download.yaml`, `transform.py`, `transform.yaml`, and `metadata.yaml` files to suit your needs.
-   - For more information, see the [Koza documentation](https://koza.monarchinitiative.org) and [kghub-downloader](https://github.com/monarch-initiative/kghub-downloader).
-1. Add any additional dependencies to the `pyproject.toml` file.
-1. Adjust the contents of the `tests` directory to test the functionality of your transform.
+**Biolink captured:**
 
-#### Documentation
+- `biolink:GeneToDiseaseAssociation`
+    - id (UUID)
+    - subject (gene ID)
+    - predicate (`biolink:related_to`)
+    - object (DOID)
+    - has_evidence (evidence code)
+    - publications
+    - primary_knowledge_source (source database)
+    - aggregator_knowledge_source (`["infores:monarchinitiative", "infores:agrkb"]`)
 
-1. Update this `README.md` file with any additional information about the project.
-1. Add any appropriate documentation to the `docs` directory.
+- `biolink:VariantToDiseaseAssociation`
+    - id (UUID)
+    - subject (allele ID)
+    - predicate (`biolink:related_to`)
+    - object (DOID)
+    - has_evidence, publications, knowledge sources (as above)
 
-> **Note:** After the GitHub Actions for deploying documentation runs, the documentation will be automatically deployed to GitHub Pages.  
-> However, you will need to go to the repository settings and set the GitHub Pages source to the `gh-pages` branch, using the `/docs` directory.
+- `biolink:GenotypeToDiseaseAssociation`
+    - id (UUID)
+    - subject (affected genomic model ID)
+    - predicate (`biolink:model_of`)
+    - object (DOID)
+    - has_evidence, publications, knowledge sources (as above)
 
-Once you have completed these steps, you can remove the [Setting Up a New Project](#setting-up-a-new-project) section from this `README.md` file.
+### Phenotype
 
-## Data Sources
-Update this section to describe the source of the data for the ingest. Include information about the projects and groups that create or curate the data, which data files are used, and the specific sources and/or versions of those files. It is also valuable to document what model is used for the ingest (generally the Biolink Model) and what types of nodes and edges are created. Here is an example of how you might document this:
+Phenotype associations using the [phenotype ingest format](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/phenotype). This file contains gene, allele, and genotype phenotypes. An entity lookup file is used to determine subject category. Environmental conditions are captured as qualifiers.
 
-Data files for YOUR_SOURCE_DATA_TYPE are available from GROUP_OR_PROJECT through there portal at (include links where possible).
+**Biolink captured:**
 
-### Source Files
-This ingest relies on N data files from GROUP_OR_PROJECT and one additional data file for FILE_USAGE (often mapping) from OTHER_GROUP_OR_PROJECT.
-  - FILENAME_1 - Describe the data in the file and give a basic description of how it's used. It's nice to include the URL's here as well as having them in the downloads.yaml later
+- `biolink:GeneToPhenotypicFeatureAssociation`
+    - id (UUID)
+    - subject (gene ID)
+    - predicate (`biolink:has_phenotype`)
+    - object (phenotype term ID)
+    - publications
+    - qualifiers (condition class IDs)
+    - primary_knowledge_source (source database)
+    - aggregator_knowledge_source (`["infores:monarchinitiative", "infores:agrkb"]`)
 
-### Nodes and Edges
-Use this section describe the nodes and edges generated from the ingest for instance
- - Gene Nodes - Description of which nodes are created and what data may be excluded from the ingest.
- - Gene → Disease - Similar description of the edges and which edges are created or how the data may be filtered.
+- `biolink:GenotypeToPhenotypicFeatureAssociation`
+    - subject (genotype ID), fields as above
 
-## Transform Code and Configuration
-Metadata for the infest is in the `metadata.yaml` file and may require some adjustment depending on your configuration. Data files and locations are listed in the `download.yaml` file which is used to download all of the data sources before the transform. The `transform.yaml` file and python file `transform.py` contain the configuration and transformation code, respectively. 
+- `biolink:VariantToPhenotypicFeatureAssociation`
+    - subject (variant ID), fields as above
 
-For more information, see the [Koza documentation](https://koza.monarchinitiative.org) and [kghub-downloader](https://github.com/monarch-initiative/kghub-downloader).
+### Expression
 
-Dependencies are listed in `pyproject.toml` file. This project uses pytest for development testing located in the `tests` directory to test the functionality of your transform.
+Gene expression data. The full data model of the Alliance expression file includes Species, GeneID, GeneSymbol, Location, StageTerm, AssayID, CellularComponentID, AnatomyTermID, and more. Not all fields are currently populated in all input data sets.
 
-## Documentation
-The documentation for this ingest is in this `README.md` file and additional documentation is in the `docs` directory.
+**Discussion Group**: https://www.alliancegenome.org/working-groups#expression
+**Download**: https://www.alliancegenome.org/downloads#expression
 
-> **Note:** After the GitHub Actions for deploying documentation runs, the documentation will be automatically deployed to GitHub Pages.  
+**Biolink captured:**
 
-#### GitHub Actions
+- `biolink:GeneToExpressionSiteAssociation`
+    - id (UUID)
+    - subject (gene ID)
+    - predicate (`biolink:expressed_in`)
+    - object (anatomical structure term ID or cellular component term ID)
+    - stage_qualifier (stage term ID, when available)
+    - qualifiers (assay type)
+    - publications
+    - primary_knowledge_source (source database)
+    - aggregator_knowledge_source (`["infores:monarchinitiative", "infores:agrkb"]`)
 
-This project is set up with several GitHub Actions workflows.
-You should not need to modify these workflows unless you want to change the behavior.
-The workflows are located in the `.github/workflows` directory:
+### Genotype
 
-- `test.yaml`: Run the pytest suite.
-- `create-release.yaml`: Create a new release once a week, or manually.
-- `deploy-docs.yaml`: Deploy the documentation to GitHub Pages (on pushes to main).
-- `update-docs.yaml`: After a release, update the documentation with node/edge reports.
+Genotype/AGM (Affected Genomic Model) entities and their associations to alleles and genes.
 
-## Installation
+**Biolink captured:**
 
-```bash
-cd alliance-disease-association-ingest
-make install
-# or
-uv sync --dev
-```
+- `biolink:Genotype`
+    - id (genotype ID)
+    - name
+    - type (subtype)
+    - in_taxon (NCBI Taxon ID)
+    - in_taxon_label
 
-> **Note** that the `make install` command is just a convenience wrapper around `uv sync --dev`.
+- `biolink:GenotypeToVariantAssociation`
+    - id (UUID)
+    - subject (genotype ID)
+    - predicate (`biolink:has_sequence_variant`)
+    - object (allele ID)
+    - qualifier (zygosity)
+    - primary_knowledge_source, aggregator_knowledge_source
 
-Once installed, you can check that everything is working as expected:
+- `biolink:GenotypeToGeneAssociation`
+    - id (UUID)
+    - subject (genotype ID)
+    - predicate (`biolink:related_to`)
+    - object (gene ID, from allele lookup)
+    - primary_knowledge_source, aggregator_knowledge_source
 
-```bash
-# Run the pytest suite
-make test
-# Download the data and run the Koza transform
-make download
-make run
-```
+### Allele
+
+Allele/variant entities and their associations to genes.
+
+**Biolink captured:**
+
+- `biolink:SequenceVariant`
+    - id (allele ID)
+    - name (allele symbol)
+    - in_taxon (NCBI Taxon ID)
+    - in_taxon_label
+    - synonym
+
+- `biolink:VariantToGeneAssociation`
+    - id (UUID)
+    - subject (allele ID)
+    - predicate (`biolink:is_sequence_variant_of`)
+    - original_predicate (variant type SO term)
+    - object (gene ID)
+    - primary_knowledge_source (source database)
+    - aggregator_knowledge_source (`["infores:monarchinitiative", "infores:agrkb"]`)
+
+## Post-Download Processing
+
+The `postdownload` step extracts entity IDs for lookup files used by the phenotype and genotype transforms:
+- `data/alliance_gene.tsv` - Gene IDs
+- `data/alliance_allele.tsv` - Allele IDs
+- `data/alliance_genotype.tsv` - Genotype IDs
 
 ## Usage
 
-This project is set up with a Makefile for common tasks.  
-To see available options:
-
 ```bash
-make help
+# Install dependencies
+just install
+
+# Run full pipeline
+just run
+
+# Or run steps individually
+just download        # Download Alliance data files
+just postdownload    # Extract entity lookup files
+just transform-all   # Run all Koza transforms
+just test            # Run tests
+
+# Run specific transform
+just transform gene
+just transform disease
 ```
 
-### Download and Transform
+## Requirements
 
-Download the data for the alliance_disease_association_ingest transform:
+- Python 3.10+
+- [uv](https://github.com/astral-sh/uv) package manager
+- [just](https://github.com/casey/just) command runner
 
-```bash
-uv run alliance_disease_association_ingest download
-```
+## Citation
 
-To run the Koza transform for alliance-disease-association-ingest:
+Harmonizing model organism data in the Alliance of Genome Resources. 2022. Alliance of Genome Resources Consortium. Genetics, Volume 220, Issue 4, April 2022. Published Online: 25 February 2022. doi: doi.org/10.1093/genetics/iyac022. PMID: 35380658; PMCID: PMC8982023.
 
-```bash
-uv run alliance_disease_association_ingest transform
-```
+## License
 
-To see available options:
-
-```bash
-uv run alliance_disease_association_ingest download --help
-# or
-uv run alliance_disease_association_ingest transform --help
-```
-
-### Testing
-
-To run the test suite:
-
-```bash
-make test
-```
-
----
-
-> This project was generated using [monarch-initiative/cookiecutter-monarch-ingest](https://github.com/monarch-initiative/cookiecutter-monarch-ingest).  
-> Keep this project up to date using cruft by occasionally running in the project directory:
->
-> ```bash
-> cruft update
-> ```
->
-> For more information, see the [cruft documentation](https://cruft.github.io/cruft/#updating-a-project)
+BSD-3-Clause

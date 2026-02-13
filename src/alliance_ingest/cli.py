@@ -38,11 +38,11 @@ def discover_transform_configs(base_path: Path = Path(".")) -> List[Path]:
 def discover_download_configs(base_path: Path = Path(".")) -> List[Path]:
     """Discover download.yaml files."""
     download_configs = []
-    
+
     # Look for download.yaml files
     for yaml_file in base_path.glob("src/**/download.yaml"):
         download_configs.append(yaml_file)
-    
+
     return sorted(download_configs)
 
 
@@ -50,9 +50,9 @@ def run_command(cmd: List[str], description: str) -> bool:
     """Run a command and return success status."""
     console.print(f"[bold blue]Running:[/bold blue] {description}")
     console.print(f"[dim]Command: {' '.join(cmd)}[/dim]")
-    
+
     try:
-        result = subprocess.run(cmd, check=True, capture_output=False)
+        subprocess.run(cmd, check=True, capture_output=False)
         console.print(f"[green]✓ {description} completed successfully[/green]\n")
         return True
     except subprocess.CalledProcessError as e:
@@ -70,13 +70,13 @@ def run_downloads(
 ) -> int:
     """Download all data sources. Returns number of successful downloads."""
     download_configs = discover_download_configs()
-    
+
     if not download_configs:
         console.print("[yellow]No download.yaml files found[/yellow]")
         return 0
-    
+
     console.print(Panel(f"[bold]Downloading data from {len(download_configs)} sources[/bold]"))
-    
+
     success_count = 0
     for config in download_configs:
         cmd = ["uv", "run", "downloader", str(config)]
@@ -86,10 +86,10 @@ def run_downloads(
             cmd.append("--ignore-cache")
         if verbose:
             cmd.append("--verbose")
-            
+
         if run_command(cmd, f"Download from {config.parent.name}"):
             success_count += 1
-    
+
     console.print(f"[bold]Downloads completed: {success_count}/{len(download_configs)} successful[/bold]")
     return success_count
 
@@ -106,19 +106,19 @@ def download(
 
 def run_transforms(
     output_dir: str = "output",
-    output_format: str = "tsv", 
+    output_format: str = "tsv",
     limit: Optional[int] = None,
     progress: bool = False,
 ) -> int:
     """Run all discovered transforms. Returns number of successful transforms."""
     transform_configs = discover_transform_configs()
-    
+
     if not transform_configs:
         console.print("[yellow]No transform configs found[/yellow]")
         return 0
-    
+
     console.print(Panel(f"[bold]Running {len(transform_configs)} transforms[/bold]"))
-    
+
     success_count = 0
     for config in transform_configs:
         cmd = ["uv", "run", "koza", "transform", str(config)]
@@ -128,11 +128,11 @@ def run_transforms(
             cmd.extend(["--limit", str(limit)])
         if progress:
             cmd.append("--progress")
-            
+
         transform_name = config.parent.name
         if run_command(cmd, f"Transform {transform_name}"):
             success_count += 1
-    
+
     console.print(f"[bold]Transforms completed: {success_count}/{len(transform_configs)} successful[/bold]")
     return success_count
 
@@ -157,9 +157,9 @@ def test(
     cmd = ["uv", "run", "pytest", "tests/"]
     if verbose:
         cmd.append("-v")
-    
+
     console.print(Panel("[bold]Running all tests[/bold]"))
-    
+
     if run_command(cmd, "Test suite"):
         console.print("[green]All tests completed[/green]")
     else:
@@ -167,7 +167,7 @@ def test(
         sys.exit(1)
 
 
-@app.command() 
+@app.command()
 def run(
     output_dir: str = typer.Option("output", help="Output directory"),
     download_first: bool = typer.Option(True, help="Download data before transforming"),
@@ -175,9 +175,9 @@ def run(
 ):
     """Run the complete ingest pipeline: download → transform → (optionally test)."""
     console.print(Panel("[bold green]Starting complete ingest pipeline[/bold green]"))
-    
+
     success = True
-    
+
     # Download phase
     if download_first:
         try:
@@ -187,7 +187,7 @@ def run(
         except Exception as e:
             console.print(f"[red]Download phase failed: {e}[/red]")
             success = False
-    
+
     # Transform phase
     if success:
         try:
@@ -197,7 +197,7 @@ def run(
         except Exception as e:
             console.print(f"[red]Transform phase failed: {e}[/red]")
             success = False
-    
+
     # Test phase (optional)
     if success and run_tests:
         try:
@@ -205,7 +205,7 @@ def run(
         except Exception as e:
             console.print(f"[red]Test phase failed: {e}[/red]")
             success = False
-    
+
     if success:
         console.print(Panel("[bold green]Pipeline completed successfully![/bold green]"))
     else:
@@ -218,18 +218,18 @@ def discover(
 ):
     """Show what configs and files would be discovered and run."""
     console.print(Panel("[bold]Discovery Report[/bold]"))
-    
+
     download_configs = discover_download_configs()
     transform_configs = discover_transform_configs()
-    
+
     console.print(f"[bold]Download configs found:[/bold] {len(download_configs)}")
     for config in download_configs:
         console.print(f"  • {config}")
-    
-    console.print(f"\n[bold]Transform configs found:[/bold] {len(transform_configs)}")  
+
+    console.print(f"\n[bold]Transform configs found:[/bold] {len(transform_configs)}")
     for config in transform_configs:
         console.print(f"  • {config}")
-    
+
     test_dir = Path("tests")
     if test_dir.exists():
         test_files = list(test_dir.glob("**/test_*.py"))
