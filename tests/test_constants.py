@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from src.alliance_ingest.constants import TAXON_LABELS
+from alliance_ingest.constants import TAXON_LABELS
 
 EXPECTED_TAXA = [
     "NCBITaxon:9606",

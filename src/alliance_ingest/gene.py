@@ -3,7 +3,6 @@ from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
 from alliance_ingest.constants import TAXON_LABELS
 
-# Inline source_map to avoid relative import issues in Koza 2.0
 source_map = {
     "FB": "infores:flybase",
     "MGI": "infores:mgi",

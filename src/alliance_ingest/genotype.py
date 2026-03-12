@@ -22,7 +22,6 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
-
 @koza.transform_record()
 def transform_record(koza_transform, row: dict) -> List:
     # Code to transform each row of data

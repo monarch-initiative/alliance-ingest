@@ -29,7 +29,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/alliance_ingest"]
 
 [tool.hatch.version]
 source = "uv-dynamic-versioning"
