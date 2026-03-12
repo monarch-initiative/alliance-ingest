@@ -1,6 +1,8 @@
 import koza
 from biolink_model.datamodel.pydanticmodel_v2 import Gene
 
+from alliance_ingest.constants import TAXON_LABELS
+
 # Inline source_map to avoid relative import issues in Koza 2.0
 source_map = {
     "FB": "infores:flybase",
@@ -28,29 +30,9 @@ def transform_record(koza_transform, row):
         row["name"] = row["symbol"]
 
     in_taxon = row["basicGeneticEntity"]["taxonId"]
-    try:
-        in_taxon_label = koza_transform.lookup(in_taxon, "label", "taxon-labels")
-    except Exception:
-        if in_taxon == "NCBITaxon:10090":
-            in_taxon_label = "Mus musculus"
-        elif in_taxon == "NCBITaxon:7955":
-            in_taxon_label = "Danio rerio"
-        elif in_taxon == "NCBITaxon:10116":
-            in_taxon_label = "Rattus norvegicus"
-        elif in_taxon == "NCBITaxon:6239":
-            in_taxon_label = "Caenorhabditis elegans"
-        elif in_taxon == "NCBITaxon:7227":
-            in_taxon_label = "Drosophila melanogaster"
-        elif in_taxon == "NCBITaxon:8355":
-            in_taxon_label = "Xenopus laevis"
-        elif in_taxon == "NCBITaxon:8364":
-            in_taxon_label = "Xenopus tropicalis"
-        elif in_taxon == "NCBITaxon:4932":
-            in_taxon_label = "Saccharomyces cerevisiae"
-        elif in_taxon == "NCBITaxon:559292":
-            in_taxon_label = "Saccharomyces cerevisiae S288C"
-        else:
-            raise ValueError(f"Can't find taxon name for: {in_taxon}")
+    in_taxon_label = TAXON_LABELS.get(in_taxon)
+    if in_taxon_label is None:
+        raise ValueError(f"Can't find taxon name for: {in_taxon}")
 
     gene = Gene(
         id=gene_id,

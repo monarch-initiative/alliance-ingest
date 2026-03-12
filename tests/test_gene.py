@@ -151,19 +151,18 @@ def no_name_row():
 
 @pytest.fixture
 def pax2a(pax2a_row):
-    return transform_record(None, pax2a_row)
+    runner = KozaRunner(data=pax2a_row, writer=None, hooks=None)
+    return transform_record(runner, pax2a_row)
 
 @pytest.fixture
-def no_synonym_gene(no_synonym_row, taxon_label_map_cache):
+def no_synonym_gene(no_synonym_row):
     runner = KozaRunner(data=no_synonym_row, writer=None, hooks=None)
-    runner.mappings = taxon_label_map_cache
     return transform_record(runner, no_synonym_row)
 
 
 @pytest.fixture
-def no_name_gene(no_name_row, taxon_label_map_cache):
+def no_name_gene(no_name_row):
     runner = KozaRunner(data=no_name_row, writer=None, hooks=None)
-    runner.mappings = taxon_label_map_cache
     return transform_record(runner, no_name_row)
 
 
@@ -205,3 +204,61 @@ def test_gene_information_no_name_gene_uses_symbol(no_name_gene):
     gene = no_name_gene[0]
     assert gene
     assert gene.name == gene.symbol
+
+
+@pytest.fixture
+def mouse_gene_row():
+    return {
+        "symbol": "Trp53",
+        "name": "transformation related protein 53",
+        "soTermId": "SO:0001217",
+        "basicGeneticEntity": {
+            "primaryId": "MGI:98834",
+            "crossReferences": [
+                {"id": "NCBI_Gene:22059", "pages": []},
+            ],
+            "genomeLocations": [],
+            "taxonId": "NCBITaxon:10090",
+        },
+    }
+
+
+@pytest.fixture
+def mouse_gene(mouse_gene_row):
+    runner = KozaRunner(data=mouse_gene_row, writer=None, hooks=None)
+    return transform_record(runner, mouse_gene_row)
+
+
+def test_mouse_gene_taxon(mouse_gene):
+    gene = mouse_gene[0]
+    assert "NCBITaxon:10090" in gene.in_taxon
+    assert gene.in_taxon_label == "Mus musculus"
+
+
+@pytest.fixture
+def rat_gene_row():
+    return {
+        "symbol": "Tp53",
+        "name": "tumor protein p53",
+        "soTermId": "SO:0001217",
+        "basicGeneticEntity": {
+            "primaryId": "RGD:3889",
+            "crossReferences": [
+                {"id": "NCBI_Gene:24842", "pages": []},
+            ],
+            "genomeLocations": [],
+            "taxonId": "NCBITaxon:10116",
+        },
+    }
+
+
+@pytest.fixture
+def rat_gene(rat_gene_row):
+    runner = KozaRunner(data=rat_gene_row, writer=None, hooks=None)
+    return transform_record(runner, rat_gene_row)
+
+
+def test_rat_gene_taxon(rat_gene):
+    gene = rat_gene[0]
+    assert "NCBITaxon:10116" in gene.in_taxon
+    assert gene.in_taxon_label == "Rattus norvegicus"
