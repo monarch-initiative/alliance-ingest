@@ -13,7 +13,7 @@ from biolink_model.datamodel.pydanticmodel_v2 import Genotype, GenotypeToGeneAss
 from koza import KozaTransform
 from koza.io.writer.passthrough_writer import PassthroughWriter
 
-from src.alliance_ingest.genotype import transform_record
+from alliance_ingest.genotype import transform_record
 
 
 @pytest.fixture

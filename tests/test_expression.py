@@ -3,7 +3,7 @@ from biolink_model.datamodel.pydanticmodel_v2 import GeneToExpressionSiteAssocia
 from koza import KozaTransform
 from koza.io.writer.passthrough_writer import PassthroughWriter
 
-from src.alliance_ingest.expression import transform_record
+from alliance_ingest.expression import transform_record
 
 
 def aggregator_knowledge_sources(association) -> bool:

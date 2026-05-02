@@ -10,7 +10,7 @@ https://koza.monarchinitiative.org/Usage/testing/
 
 import pytest
 
-from src.alliance_ingest.disease import transform_record
+from alliance_ingest.disease import transform_record
 
 
 # Define the mock koza transform on an example row

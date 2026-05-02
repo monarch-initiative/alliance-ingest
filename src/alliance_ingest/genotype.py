@@ -2,6 +2,7 @@ import uuid  # For generating UUIDs for associations
 from typing import List
 
 import koza
+from alliance_ingest.constants import TAXON_LABELS
 from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
     Genotype,
@@ -21,12 +22,6 @@ source_map = {
     "ZFIN": "infores:zfin",
 }
 
-taxon_label_map = {
-    "NCBITaxon:7955": "Danio rerio",
-    "NCBITaxon:10090": "Mus musculus",
-    "NCBITaxon:10116": "Rattus norvegicus",
-}
-
 @koza.transform_record()
 def transform_record(koza_transform, row: dict) -> List:
     # Code to transform each row of data
@@ -36,7 +31,7 @@ def transform_record(koza_transform, row: dict) -> List:
         type=[row["subtype"]] if "subtype" in row else None,
         name=row["name"],
         in_taxon=[row["taxonId"]],
-        in_taxon_label=taxon_label_map[row["taxonId"]],
+        in_taxon_label=TAXON_LABELS[row["taxonId"]],
     )
     entities = [genotype]
 
