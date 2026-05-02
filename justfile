@@ -19,9 +19,9 @@ install:
 
 # ============== Ingest Pipeline ==============
 
-# Full pipeline: download -> postdownload -> transform -> postprocess
+# Full pipeline: download -> postdownload -> transform -> postprocess -> metadata
 [group('ingest')]
-run: download postdownload transform-all postprocess
+run: download postdownload transform-all postprocess metadata
     @echo "Done!"
 
 # Download source data
