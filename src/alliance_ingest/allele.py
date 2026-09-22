@@ -1,6 +1,5 @@
 import csv
 import sys
-import uuid
 from typing import List
 
 import koza
@@ -77,7 +76,6 @@ def transform_record(koza_transform, row: dict) -> List:
     # Add allele to gene associations if gene IDs are available
     if row.get("AlleleAssociatedGeneId") and row["AlleleAssociatedGeneId"] != "-":
         allele_to_gene = VariantToGeneAssociation(
-            id=str(uuid.uuid4()),
             subject=allele_id,
             predicate=get_predicate(row["VariantsTypeId"]),
             original_predicate=row["VariantsTypeId"],

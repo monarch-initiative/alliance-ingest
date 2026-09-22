@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 import koza
@@ -72,7 +71,6 @@ def transform_record(koza_transform, row: dict) -> List:
         raise ValueError(f"Unknown category {category} for {id}")
 
     association = EdgeClass(
-        id="uuid:" + str(uuid.uuid1()),
         subject=id,
         predicate="biolink:has_phenotype",
         object=phenotypic_feature_id,

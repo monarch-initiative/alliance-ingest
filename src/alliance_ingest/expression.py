@@ -1,4 +1,3 @@
-import uuid
 
 import koza
 from biolink_model.datamodel.pydanticmodel_v2 import AgentTypeEnum, GeneToExpressionSiteAssociation, KnowledgeLevelEnum
@@ -60,7 +59,6 @@ def transform_record(koza_transform, row):
         if anatomical_entity_id:
             associations.append(
                 GeneToExpressionSiteAssociation(
-                    id="uuid:" + str(uuid.uuid1()),
                     subject=gene_id,
                     predicate="biolink:expressed_in",
                     object=anatomical_entity_id,
@@ -79,7 +77,6 @@ def transform_record(koza_transform, row):
             # (but ignore otherwise ignore it, if reported alongside in the record)
             associations.append(
                 GeneToExpressionSiteAssociation(
-                    id="uuid:" + str(uuid.uuid1()),
                     subject=gene_id,
                     predicate="biolink:expressed_in",
                     object=cellular_component_id,
