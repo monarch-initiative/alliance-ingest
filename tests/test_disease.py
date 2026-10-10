@@ -35,7 +35,7 @@ def test_mgi_agm(mgi_agm):
     assert len(entities) == 1
     association = entities[0]
     assert association
-    assert association.category == ['biolink:GenotypeToDiseaseAssociation']
+    assert association.category == ['biolink:GenotypeAsAModelOfDiseaseAssociation']
     assert association.subject == 'MGI:3799157'
     assert association.predicate == 'biolink:model_of'
     assert association.object == 'DOID:0060041'
@@ -62,7 +62,7 @@ def test_zfin_agm(zfin_agm):
     assert len(entities) == 1
     association = entities[0]
     assert association
-    assert association.category == ['biolink:GenotypeToDiseaseAssociation']
+    assert association.category == ['biolink:GenotypeAsAModelOfDiseaseAssociation']
     assert association.subject == 'ZFIN:ZDB-FISH-160908-10'
     assert association.predicate == 'biolink:model_of'
     assert association.object == 'DOID:423'

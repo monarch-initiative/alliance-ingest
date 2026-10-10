@@ -37,7 +37,7 @@ def transform_record(koza_transform, row: dict) -> List:
 
     for allele in row["affectedGenomicModelComponents"] if "affectedGenomicModelComponents" in row else []:
         genotype_to_variant_association = GenotypeToVariantAssociation(
-            id=str(uuid.uuid4()),
+            id=f"urn:uuid:{uuid.uuid4()}",
             subject=genotype.id,
             predicate="biolink:has_sequence_variant",
             object=allele["alleleID"],
@@ -53,7 +53,7 @@ def transform_record(koza_transform, row: dict) -> List:
         gene_data = koza_transform.lookup(allele["alleleID"], "AlleleAssociatedGeneId", "allele_to_gene")
         if gene_data:
             genotype_to_gene_association = GenotypeToGeneAssociation(
-                id=str(uuid.uuid4()),
+                id=f"urn:uuid:{uuid.uuid4()}",
                 subject=genotype.id,
                 # More specific predicate may come eventually, keeping it vague for now
                 predicate="biolink:related_to",

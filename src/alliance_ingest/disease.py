@@ -6,9 +6,9 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
     AgentTypeEnum,
     Association,
     GeneToDiseaseAssociation,
-    GenotypeToDiseaseAssociation,
+    GenotypeAsAModelOfDiseaseAssociation,
     KnowledgeLevelEnum,
-    VariantToDiseaseAssociation,
+    VariantAsAModelOfDiseaseAssociation,
 )
 
 #  TODO: look at row["source"] to update this map
@@ -32,10 +32,10 @@ def transform_record(koza_transform, row: dict) -> List[Association]:
         AssociationClass = GeneToDiseaseAssociation
         predicate = "biolink:related_to"  # TODO: sort out accurate predicates for each kind of row
     elif subject_category == 'allele':
-        AssociationClass = VariantToDiseaseAssociation
+        AssociationClass = VariantAsAModelOfDiseaseAssociation
         predicate = "biolink:related_to"  # TODO: sort out accurate predicates for each kind of row
     elif subject_category == 'affected_genomic_model':
-        AssociationClass = GenotypeToDiseaseAssociation
+        AssociationClass = GenotypeAsAModelOfDiseaseAssociation
         predicate = "biolink:model_of"
     else:
         # skip this row if there's an association with another kind of entity
@@ -72,7 +72,7 @@ def transform_record(koza_transform, row: dict) -> List[Association]:
         return []
 
     association = AssociationClass(
-        id=str(uuid.uuid1()),
+        id=f"urn:uuid:{uuid.uuid4()}",
         subject=row["DBObjectID"],
         predicate=predicate,
         object=row["DOID"],
