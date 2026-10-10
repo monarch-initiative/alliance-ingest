@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 import koza
@@ -71,6 +72,7 @@ def transform_record(koza_transform, row: dict) -> List[Association]:
         return []
 
     association = AssociationClass(
+        id=f"urn:uuid:{uuid.uuid4()}",
         subject=row["DBObjectID"],
         predicate=predicate,
         object=row["DOID"],
