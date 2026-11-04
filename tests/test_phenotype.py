@@ -109,6 +109,9 @@ def uphenotizer_lookup_cache():
         "SGD|APO:0000003|APO:0000087|": {"status": "routed", "phenotype_id": "PHENOTYPE:2000535"},
         "SGD|APO:0000003|APO:0000087|CHEBI:25255": {"status": "routed", "phenotype_id": "PHENOTYPE:2000571"},
         "SGD|APO:0000003|APO:0000087|CHEBI:44423": {"status": "routed", "phenotype_id": "PHENOTYPE:2001137"},
+        # GO-filler rule: the chemical is not part of the class, so every chemical binds to the same ID
+        "SGD|APO:0000005|APO:0000099|CHEBI:15676": {"status": "routed", "phenotype_id": "PHENOTYPE:2002009"},
+        "SGD|APO:0000005|APO:0000099|unmapped:media:minimal": {"status": "routed", "phenotype_id": "PHENOTYPE:2002009"},
         "SGD|APO:0000113|": {"status": "skipped", "phenotype_id": ""},
     }
 
@@ -158,9 +161,7 @@ def _sgd_row(terms, object_id="SGD:S000000890", conditions=None):
 
 
 def test_fb_routed_anatomy_phenotype(bound_transform):
-    # Terms arrive out of termOrder to check they are sorted before keying
-    row = _fb_row(["FBbt:00004729"])
-    result = transform_record(bound_transform, row)
+    result = transform_record(bound_transform, _fb_row(["FBbt:00004729"]))
     assert len(result) == 1
     association = result[0]
     assert isinstance(association, VariantToPhenotypicFeatureAssociation)
@@ -224,6 +225,16 @@ def test_sgd_multiple_chemicals_yield_one_association_each(bound_transform):
     result = transform_record(bound_transform, _sgd_row(["APO:0000003", "APO:0000087"], conditions=conditions))
     assert sorted(a.object for a in result) == ["PHENOTYPE:2000571", "PHENOTYPE:2001137"]
     assert all(a.qualifiers == ["ZECO:0000111", "ZECO:0000111"] for a in result)
+    assert bound_transform.state["binding_status"] == {("SGD", "routed"): 2}
+
+
+def test_sgd_chemicals_bound_to_same_class_yield_one_association(bound_transform):
+    conditions = [
+        {"conditionClassId": "ZECO:0000111", "conditionStatement": "chemical:nh4", "chemicalOntologyId": "CHEBI:15676"},
+        {"conditionClassId": "ZECO:0000111", "conditionStatement": "media:minimal"},
+    ]
+    result = transform_record(bound_transform, _sgd_row(["APO:0000005", "APO:0000099"], conditions=conditions))
+    assert [a.object for a in result] == ["PHENOTYPE:2002009"]
     assert bound_transform.state["binding_status"] == {("SGD", "routed"): 2}
 
 

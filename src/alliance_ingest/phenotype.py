@@ -69,8 +69,10 @@ def bound_phenotype_ids(koza_transform, row: dict, source: str) -> List[str]:
     The record's ordered terms (and, for SGD, each chemical condition) are keyed
     the way uphenotizer keys them and looked up in the mapping built from
     source_map.tsv. An SGD record with several chemicals binds once per
-    chemical. Records whose shape has no phenotype class yet (unrouted, skipped,
-    or absent from the table) produce nothing and are counted for the end report.
+    chemical; when several chemicals bind to the same class (rules whose filler
+    is the GO observable ignore the chemical) the class is returned once.
+    Records whose shape has no phenotype class yet (unrouted, skipped, or absent
+    from the table) produce nothing and are counted for the end report.
     """
     terms = ordered_terms(row)
     record_chemicals = chemicals(row) if source == "SGD" else []
@@ -83,7 +85,7 @@ def bound_phenotype_ids(koza_transform, row: dict, source: str) -> List[str]:
             status = NOT_IN_BINDING_TABLE
         _count(koza_transform, "binding_status", (source, status))
         phenotype_id = koza_transform.lookup(key, "phenotype_id", map_name=PHENOTYPE_LOOKUP)
-        if phenotype_id and phenotype_id != key:
+        if phenotype_id and phenotype_id != key and phenotype_id not in phenotype_ids:
             phenotype_ids.append(phenotype_id)
     return phenotype_ids
 
