@@ -16,7 +16,7 @@ from alliance_ingest.phenotype_binding import (
 from alliance_ingest.uphenotizer_phenotype_lookup import load_fbcv_namespaces
 from alliance_ingest.uphenotizer_phenotype_lookup import transform_record as lookup_transform_record
 
-FBCV_MINI = Path(__file__).parent / "data" / "fbcv_mini.obo"
+FBCV_MINI = Path(__file__).parent / "fixtures" / "fbcv_mini.obo"
 
 
 def test_ordered_terms_follow_term_order():

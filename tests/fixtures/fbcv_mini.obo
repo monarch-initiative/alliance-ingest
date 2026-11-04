@@ -1,0 +1,36 @@
+format-version: 1.2
+data-version: fbcv/releases/2026-11-02
+
+[Term]
+id: FBcv:0000298
+name: recessive
+namespace: dominance_qualifier
+
+[Term]
+id: FBcv:0000351
+name: lethal
+namespace: phenotypic_class
+
+[Term]
+id: FBcv:0000325
+name: neurogenic phenotype
+namespace: phenotypic_class
+
+[Term]
+id: FBcv:0000340
+name: partially
+namespace: extent
+
+[Term]
+id: FBcv:0000065
+name: posterior
+namespace: spatial_qualifier
+
+[Term]
+id: FBcv:0000700
+name: somatic clone
+namespace: clone_qualifier
+
+[Typedef]
+id: part_of
+namespace: dominance_qualifier
