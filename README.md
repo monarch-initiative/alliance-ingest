@@ -75,6 +75,16 @@ Disease associations from the combined Alliance disease file. Supports gene, all
 
 Phenotype associations using the [phenotype ingest format](https://github.com/alliance-genome/agr_schemas/tree/master/ingest/phenotype). This file contains gene, allele, and genotype phenotypes. An entity lookup file is used to determine subject category. Environmental conditions are captured as qualifiers.
 
+RGD, MGI and WormBase records carry a single pre-composed phenotype term (MP, WBPhenotype), which is used directly as the object.
+
+FlyBase and SGD annotate phenotypes post-composed: an ordered list of terms (FBbt/GO head term plus FBcv qualifiers; APO qualifier plus APO observable) and, for SGD, often a ChEBI chemical condition. [uphenotizer](https://github.com/monarch-initiative/uphenotizer) pre-composes a class for each annotation shape (`PHENOTYPE:` prefix; the DPO-ext and APO-ext components imported into [phenio](https://github.com/monarch-initiative/phenio)) and publishes a binding table, `output/source_map.tsv`, keyed on `(source, ordered terms, chemical)`. This ingest downloads that table and loads it as a koza mapping (`uphenotizer_phenotype_lookup.yaml`); `phenotype_binding.py` builds the same key from each Alliance record. A record resolves to:
+
+- the bound `PHENOTYPE:` class, for a `routed` binding
+- the head FBcv term itself, for a `covered_upstream` binding (the head term is already a DPO class; trailing context terms such as dominance or stage are dropped, as uphenotizer does)
+- nothing, for `unrouted`/`skipped` bindings or shapes not yet in the table (counted per source and status in the log at the end of the transform)
+
+An SGD record with several chemical conditions yields one association per chemical. The binding table is recomputed weekly by uphenotizer, so coverage grows as rules are added there.
+
 **Biolink captured:**
 
 - `biolink:GeneToPhenotypicFeatureAssociation`

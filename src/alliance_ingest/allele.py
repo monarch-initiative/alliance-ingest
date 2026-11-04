@@ -15,8 +15,10 @@ from biolink_model.datamodel.pydanticmodel_v2 import (
 csv.field_size_limit(sys.maxsize)
 
 source_map = {
+    "FB": "infores:flybase",
     "MGI": "infores:mgi",
     "RGD": "infores:rgd",
+    "SGD": "infores:sgd",
     "ZFIN": "infores:zfin",
 }
 

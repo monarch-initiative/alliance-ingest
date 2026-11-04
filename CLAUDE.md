@@ -13,6 +13,8 @@ Koza ingest repository for transforming Alliance of Genome Resources data into B
   - `genotype.py` / `genotype.yaml` - Genotype/AGM entities
   - `allele.py` / `allele.yaml` - Allele/variant entities and gene associations
   - `alliance_entity_lookup.yaml` - Entity type lookup for phenotype/genotype transforms
+  - `phenotype_binding.py` - Builds the uphenotizer binding key for FlyBase/SGD phenotype records
+  - `uphenotizer_phenotype_lookup.py` / `uphenotizer_phenotype_lookup.yaml` - Koza mapping from binding key to PHENOTYPE: class, built from uphenotizer's `output/source_map.tsv`
   - `versions.py` - Per-ingest upstream version fetcher (consumed by `just metadata`)
 - `scripts/write_metadata.py` - Emits `output/release-metadata.yaml` from `versions.py`
 - `tests/` - Unit tests for transforms
@@ -34,7 +36,7 @@ Koza ingest repository for transforming Alliance of Genome Resources data into B
 
 1. **gene** - Gene entities from Basic Gene Information (BGI) files
 2. **disease** - Gene/allele to disease associations (DISEASE-ALLIANCE_COMBINED.tsv)
-3. **phenotype** - Gene/allele to phenotype associations (PHENOTYPE_*.json)
+3. **phenotype** - Gene/allele to phenotype associations (PHENOTYPE_*.json). FlyBase and SGD phenotypes are post-composed, so they are resolved to uphenotizer's pre-composed `PHENOTYPE:` classes (DPO-ext/APO-ext in phenio) through the `uphenotizer-phenotype-lookup` mapping; records without a bound class are dropped and counted
 4. **expression** - Gene expression data (EXPRESSION_*.json)
 5. **genotype** - Genotype/AGM entities (AGM_*.json)
 6. **allele** - Allele/variant entities and gene associations (VARIANT-ALLELE_*.tsv)
@@ -57,6 +59,8 @@ The `postdownload` step extracts entity IDs for lookup files used by some transf
 ## Data Sources
 
 All data is downloaded from the Alliance of Genome Resources FMS: `https://fms.alliancegenome.org/download/`
+
+The FlyBase/SGD phenotype binding table comes from the uphenotizer repo (`output/source_map.tsv` on `main`), the same source phenio imports DPO-ext/APO-ext from.
 
 Includes data from: MGI, RGD, WB (WormBase), FB (FlyBase), ZFIN, SGD, Xenbase
 

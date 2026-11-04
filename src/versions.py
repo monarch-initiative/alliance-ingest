@@ -10,6 +10,11 @@ current release. Edges in this ingest's output carry per-MOD
 `primary_knowledge_source` (see src/alliance_ingest/phenotype.py::source_map),
 so a downstream consumer (e.g. monarch-app) can resolve an edge's exact
 upstream version even though everything was retrieved via AGR.
+
+A second top-level entry records the uphenotizer binding table
+(output/source_map.tsv) that the phenotype transform uses to resolve FlyBase
+and SGD post-composed phenotypes to PHENOTYPE: classes. It is tracked from the
+HEAD of the uphenotizer main branch, which is also what phenio imports.
 """
 
 from __future__ import annotations
@@ -19,13 +24,17 @@ from typing import Any
 
 import requests
 
-from kozahub_metadata_schema import now_iso, urls_from_download_yaml
+from kozahub_metadata_schema import now_iso, urls_from_download_yaml, version_from_github_branch
 
 
 INGEST_DIR = Path(__file__).resolve().parents[1]
 DOWNLOAD_YAML = INGEST_DIR / "download.yaml"
 
 FMS_BASE = "https://fms.alliancegenome.org/api"
+FMS_DOWNLOAD = "https://fms.alliancegenome.org/download/"
+
+UPHENOTIZER_REPO = "monarch-initiative/uphenotizer"
+UPHENOTIZER_RAW = f"https://raw.githubusercontent.com/{UPHENOTIZER_REPO}/"
 
 # AGR dataSubType.name -> Biolink infores. Mirrors source_map in
 # src/alliance_ingest/phenotype.py; XBXL+XBXT collapse to infores:xenbase.
@@ -109,21 +118,40 @@ def _per_mod_sources(release: str, our_urls: list[str], now: str) -> list[dict[s
     return sources
 
 
+def _uphenotizer_source(urls: list[str], now: str) -> dict[str, Any]:
+    """The uphenotizer binding table: FlyBase/SGD annotation shape -> PHENOTYPE: class."""
+    version, method = version_from_github_branch(UPHENOTIZER_REPO)
+    return {
+        "id": f"https://github.com/{UPHENOTIZER_REPO}",
+        "name": "uphenotizer (DPO-ext / APO-ext binding table)",
+        "urls": urls,
+        "version": version,
+        "version_method": method,
+        "retrieved_at": now,
+    }
+
+
 def get_source_versions() -> list[dict[str, Any]]:
     release, method = _alliance_release()
-    urls = urls_from_download_yaml(DOWNLOAD_YAML)
+    all_urls = urls_from_download_yaml(DOWNLOAD_YAML)
+    alliance_urls = [u for u in all_urls if u.startswith(FMS_DOWNLOAD)]
+    uphenotizer_urls = [u for u in all_urls if u.startswith(UPHENOTIZER_RAW)]
     now = now_iso()
 
     entry: dict[str, Any] = {
         "id": "infores:agr",
         "name": "Alliance of Genome Resources",
-        "urls": urls,
+        "urls": alliance_urls,
         "version": release,
         "version_method": method,
         "retrieved_at": now,
     }
     if release != "unknown":
-        nested = _per_mod_sources(release, urls, now)
+        nested = _per_mod_sources(release, alliance_urls, now)
         if nested:
             entry["sources"] = nested
-    return [entry]
+
+    sources = [entry]
+    if uphenotizer_urls:
+        sources.append(_uphenotizer_source(uphenotizer_urls, now))
+    return sources

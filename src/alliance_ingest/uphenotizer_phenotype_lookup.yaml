@@ -1,0 +1,34 @@
+name: 'uphenotizer-phenotype-lookup'
+
+metadata:
+  description: >-
+    Lookup from a FlyBase/SGD phenotype annotation shape (source, ordered
+    phenotype terms, chemical condition) to the phenotype class uphenotizer
+    binds it to. Built from uphenotizer's output/source_map.tsv; the
+    PHENOTYPE: classes it points at are imported into phenio as DPO-ext/APO-ext.
+
+reader:
+  format: 'csv'
+  delimiter: '\t'
+  files:
+    - '../../data/uphenotizer_source_map.tsv'
+  columns:
+    - 'source'
+    - 'source_terms'
+    - 'chemical'
+    - 'annotations'
+    - 'example_statement'
+    - 'status'
+    - 'rule'
+    - 'pattern'
+    - 'key'
+    - 'class_id'
+    - 'upheno_id'
+    - 'reason'
+
+transform:
+  code: 'uphenotizer_phenotype_lookup.py'
+  key: 'key'
+  values:
+    - 'status'
+    - 'phenotype_id'

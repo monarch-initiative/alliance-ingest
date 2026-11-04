@@ -10,6 +10,8 @@ reader:
     - "../../data/VARIANT-ALLELE_NCBITaxon10090.tsv.gz"
     - "../../data/VARIANT-ALLELE_NCBITaxon10116.tsv.gz"
     - "../../data/VARIANT-ALLELE_NCBITaxon7955.tsv.gz"
+    - "../../data/VARIANT-ALLELE_NCBITaxon7227.tsv.gz"
+    - "../../data/VARIANT-ALLELE_NCBITaxon559292.tsv.gz"
 
   columns:
     - Taxon

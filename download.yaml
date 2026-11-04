@@ -14,6 +14,17 @@
   local_name: data/PHENOTYPE_MGI.json.gz
 - url: https://fms.alliancegenome.org/download/PHENOTYPE_WB.json.gz
   local_name: data/PHENOTYPE_WB.json.gz
+- url: https://fms.alliancegenome.org/download/PHENOTYPE_FB.json.gz
+  local_name: data/PHENOTYPE_FB.json.gz
+- url: https://fms.alliancegenome.org/download/PHENOTYPE_SGD.json.gz
+  local_name: data/PHENOTYPE_SGD.json.gz
+
+# uphenotizer binding table: maps each FlyBase/SGD annotation shape
+# (source, ordered phenotype terms, ChEBI condition) to the pre-composed
+# DPO-ext / APO-ext phenotype class (PHENOTYPE:*) that phenio imports.
+# See https://github.com/monarch-initiative/uphenotizer#binding-annotations-to-classes
+- url: https://raw.githubusercontent.com/monarch-initiative/uphenotizer/main/output/source_map.tsv
+  local_name: data/uphenotizer_source_map.tsv
 
 # Gene Files
 - url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
@@ -42,6 +53,10 @@
   local_name: data/VARIANT-ALLELE_NCBITaxon10090.tsv.gz
 - url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
   local_name: data/VARIANT-ALLELE_NCBITaxon10116.tsv.gz
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon7227.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon7227.tsv.gz
+- url: https://fms.alliancegenome.org/download/VARIANT-ALLELE_NCBITaxon559292.tsv.gz
+  local_name: data/VARIANT-ALLELE_NCBITaxon559292.tsv.gz
 
 # AGM / Genotype Files
 - url: https://fms.alliancegenome.org/download/AGM_MGI.json.gz
