@@ -28,6 +28,8 @@ reader:
 
 transform:
   code: 'uphenotizer_phenotype_lookup.py'
+  # FBcv namespaces decide which trailing terms are droppable context (relative to this file)
+  fbcv_obo: '../../data/fbcv.obo'
   key: 'key'
   values:
     - 'status'

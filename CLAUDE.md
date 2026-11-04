@@ -13,7 +13,7 @@ Koza ingest repository for transforming Alliance of Genome Resources data into B
   - `genotype.py` / `genotype.yaml` - Genotype/AGM entities
   - `allele.py` / `allele.yaml` - Allele/variant entities and gene associations
   - `alliance_entity_lookup.yaml` - Entity type lookup for phenotype/genotype transforms
-  - `phenotype_binding.py` - Builds the uphenotizer binding key for FlyBase/SGD phenotype records
+  - `phenotype_binding.py` - Builds the uphenotizer binding key for FlyBase/SGD phenotype records and resolves a binding row to a phenotype ID (strict `covered_upstream` rule using FBcv namespaces from `data/fbcv.obo`)
   - `uphenotizer_phenotype_lookup.py` / `uphenotizer_phenotype_lookup.yaml` - Koza mapping from binding key to PHENOTYPE: class, built from uphenotizer's `output/source_map.tsv`
   - `versions.py` - Per-ingest upstream version fetcher (consumed by `just metadata`)
 - `scripts/write_metadata.py` - Emits `output/release-metadata.yaml` from `versions.py`

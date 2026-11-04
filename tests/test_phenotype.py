@@ -104,6 +104,7 @@ def uphenotizer_lookup_cache():
     return {
         "FB|FBbt:00004729|": {"status": "routed", "phenotype_id": "PHENOTYPE:1001742"},
         "FB|FBcv:0000351|FBcv:0000298|": {"status": "covered_upstream", "phenotype_id": "FBcv:0000351"},
+        "FB|FBcv:0000351|GO:0048477|": {"status": "covered_upstream_unhandled_qualifiers", "phenotype_id": ""},
         "FB|GO:0016028|FBdv:00007001|": {"status": "unrouted", "phenotype_id": ""},
         "FB||": {"status": "skipped", "phenotype_id": ""},
         "SGD|APO:0000003|APO:0000087|": {"status": "routed", "phenotype_id": "PHENOTYPE:2000535"},
@@ -185,7 +186,12 @@ def test_fb_covered_upstream_uses_head_dpo_term(bound_transform):
 def test_fb_unrouted_and_skipped_shapes_are_dropped_and_counted(bound_transform):
     assert transform_record(bound_transform, _fb_row(["GO:0016028", "FBdv:00007001"])) == []
     assert transform_record(bound_transform, _fb_row([])) == []
-    assert bound_transform.state["binding_status"] == {("FB", "unrouted"): 1, ("FB", "skipped"): 1}
+    assert transform_record(bound_transform, _fb_row(["FBcv:0000351", "GO:0048477"])) == []
+    assert bound_transform.state["binding_status"] == {
+        ("FB", "unrouted"): 1,
+        ("FB", "skipped"): 1,
+        ("FB", "covered_upstream_unhandled_qualifiers"): 1,
+    }
 
 
 def test_fb_shape_missing_from_binding_table_is_dropped_and_counted(bound_transform):

@@ -36,6 +36,9 @@ FMS_DOWNLOAD = "https://fms.alliancegenome.org/download/"
 UPHENOTIZER_REPO = "monarch-initiative/uphenotizer"
 UPHENOTIZER_RAW = f"https://raw.githubusercontent.com/{UPHENOTIZER_REPO}/"
 
+FBCV_OBO_URL = "http://purl.obolibrary.org/obo/fbcv.obo"
+FBCV_OBO_PATH = INGEST_DIR / "data" / "fbcv.obo"
+
 # AGR dataSubType.name -> Biolink infores. Mirrors source_map in
 # src/alliance_ingest/phenotype.py; XBXL+XBXT collapse to infores:xenbase.
 MOD_INFORES = {
@@ -131,6 +134,33 @@ def _uphenotizer_source(urls: list[str], now: str) -> dict[str, Any]:
     }
 
 
+def _fbcv_version() -> tuple[str, str]:
+    """FBcv release from the OBO header's data-version line (e.g. fbcv/releases/2026-11-02)."""
+    try:
+        with open(FBCV_OBO_PATH, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("[Term]"):
+                    break
+                if line.startswith("data-version:"):
+                    return line.split(":", 1)[1].strip().rsplit("/", 1)[-1], "obo_data_version"
+    except OSError:
+        pass
+    return "unknown", "unavailable"
+
+
+def _fbcv_source(now: str) -> dict[str, Any]:
+    """FBcv, used to classify trailing terms of covered_upstream FlyBase annotations."""
+    version, method = _fbcv_version()
+    return {
+        "id": "http://purl.obolibrary.org/obo/fbcv.owl",
+        "name": "FlyBase Controlled Vocabulary (FBcv)",
+        "urls": [FBCV_OBO_URL],
+        "version": version,
+        "version_method": method,
+        "retrieved_at": now,
+    }
+
+
 def get_source_versions() -> list[dict[str, Any]]:
     release, method = _alliance_release()
     all_urls = urls_from_download_yaml(DOWNLOAD_YAML)
@@ -154,4 +184,6 @@ def get_source_versions() -> list[dict[str, Any]]:
     sources = [entry]
     if uphenotizer_urls:
         sources.append(_uphenotizer_source(uphenotizer_urls, now))
+    if FBCV_OBO_URL in all_urls:
+        sources.append(_fbcv_source(now))
     return sources

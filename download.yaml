@@ -26,6 +26,11 @@
 - url: https://raw.githubusercontent.com/monarch-initiative/uphenotizer/main/output/source_map.tsv
   local_name: data/uphenotizer_source_map.tsv
 
+# FBcv: namespaces decide which trailing terms of a FlyBase annotation are
+# droppable context when the head term is already a DPO class
+- url: http://purl.obolibrary.org/obo/fbcv.obo
+  local_name: data/fbcv.obo
+
 # Gene Files
 - url: https://fms.alliancegenome.org/download/BGI_MGI.json.gz
   local_name: data/BGI_MGI.json.gz
